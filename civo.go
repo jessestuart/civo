@@ -1,4 +1,4 @@
-// Copyright © 2016 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2016 Absolute DevOps Ltd <info@absolutedevops.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,12 @@
 
 package main
 
-import "github.com/absolutedevops/civo/cmd"
+import (
+	"github.com/absolutedevops/civo/cmd"
+	jww "github.com/spf13/jwalterweatherman"
+)
 
 func main() {
+	jww.SetStdoutThreshold(jww.LevelTrace)
 	cmd.Execute()
 }

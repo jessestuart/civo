@@ -1,0 +1,3 @@
+#!/bin/bash
+
+version=$(cat VERSION| tr -d '\n')
