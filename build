@@ -1,3 +1,14 @@
 #!/bin/bash
 
 version=$(cat VERSION| tr -d '\n')
+
+mkdir -p bin/macosx/
+mkdir -p bin/linux/
+
+echo "Building OS X version"
+GOOS=darwin GOARCH=amd64 go build ./civo.go
+mv civo bin/macosx/
+
+echo "Building Linux version"
+GOOS=linux GOARCH=amd64 go build ./civo.go
+mv civo bin/linux/
