@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/absolutedevops/civo/api"
 	"github.com/spf13/cobra"
@@ -49,11 +50,15 @@ var instanceCreateCmd = &cobra.Command{
 			InitialUser: instanceCreateInitialUser,
 			PublicIP:    instanceCreatePublicIP,
 		}
-		_, err := api.InstanceCreate(params)
+		res, err := api.InstanceCreate(params)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
 		}
+		hostname := res.S("hostname").Data().(string)
+		ID := res.S("id").Data().(string)
+		parts := strings.Split(ID, "-")
+		fmt.Printf("Building instance called `%s` with ID %s\n", hostname, parts[0])
 	},
 }
 
