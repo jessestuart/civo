@@ -19,32 +19,38 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
-var accountCreateName string
-
-var accountCreateCmd = &cobra.Command{
-	Use:     "create",
-	Aliases: []string{"new", "build", "register"},
-	Short:   "Create a new account",
-	Example: "create --name testuser",
-	Long:    `Given a name, create an account with a new API key for it`,
+// templateCmd represents the accounts command
+var templateCmd = &cobra.Command{
+	Use:     "template",
+	Aliases: []string{"templates"},
+	Short:   "List all templates",
+	Long:    `List the templates available for building instances from`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if accountCreateName == "" {
-			fmt.Println("You need to specify a name with --name in order to create an account")
-			os.Exit(-3)
-		}
-
-		_, err := api.AccountCreate(accountCreateName)
+		result, err := api.TemplatesList()
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
 		}
+
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetAutoFormatHeaders(false)
+		table.SetAutoWrapText(false)
+		table.SetHeader([]string{"ID", "Description"})
+		items, _ := result.S("items").Children()
+		for _, child := range items {
+			table.Append([]string{
+				child.S("id").Data().(string),
+				child.S("short_description").Data().(string),
+			})
+		}
+		table.Render()
 	},
 }
 
 func init() {
-	accountCmd.AddCommand(accountCreateCmd)
-	accountCreateCmd.Flags().StringVarP(&accountCreateName, "name", "n", "", "Name of the account; lowercase, hyphen separated")
+	RootCmd.AddCommand(templateCmd)
 }
