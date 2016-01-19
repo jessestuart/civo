@@ -73,3 +73,34 @@ func CurrentToken() string {
 	os.Exit(-1)
 	return ""
 }
+
+func Tokens() map[string]string {
+	ret := make(map[string]string)
+	tokens, _ := Config.S("tokens").ChildrenMap()
+	for name, token := range tokens {
+		ret[name] = token.Data().(string)
+	}
+	return ret
+}
+
+func TokenSave(name, key string) {
+	Config.SetP(key, "tokens."+name)
+	save()
+}
+
+func TokenRemove(name string) {
+	err := Config.Delete("tokens", name)
+	if err != nil {
+		fmt.Println(err)
+	}
+	save()
+}
+
+func TokenCurrent() string {
+	return getString("meta.current_token")
+}
+
+func TokenSetCurrent(name string) {
+	Config.SetP(name, "meta.current_token")
+	save()
+}
