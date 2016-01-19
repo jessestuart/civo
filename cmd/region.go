@@ -19,19 +19,18 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
-	"github.com/absolutedevops/civo/config"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
-// accountCmd represents the accounts command
-var accountCmd = &cobra.Command{
-	Use:     "account",
-	Aliases: []string{"accounts"},
-	Short:   "List current accounts (ADMIN ONLY)",
-	Long:    `List the account name and the API keys for all accounts in the system`,
+// regionCmd represents the accounts command
+var regionCmd = &cobra.Command{
+	Use:     "region",
+	Aliases: []string{"regions"},
+	Short:   "List regions",
+	Long:    `List the available regions in the Civo cloud (more coming online soon)`,
 	Run: func(cmd *cobra.Command, args []string) {
-		result, err := api.AccountsList()
+		result, err := api.RegionsList()
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
@@ -39,12 +38,11 @@ var accountCmd = &cobra.Command{
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
-		table.SetHeader([]string{"Account Name", "API Key"})
+		table.SetHeader([]string{"Name"})
 		items, _ := result.S("items").Children()
 		for _, child := range items {
 			table.Append([]string{
-				child.S("username").Data().(string),
-				child.S("api_key").Data().(string),
+				child.S("code").Data().(string),
 			})
 		}
 		table.Render()
@@ -52,7 +50,5 @@ var accountCmd = &cobra.Command{
 }
 
 func init() {
-	if config.Admin() {
-		RootCmd.AddCommand(accountCmd)
-	}
+	RootCmd.AddCommand(regionCmd)
 }
