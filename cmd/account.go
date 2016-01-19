@@ -24,13 +24,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// accountsCmd represents the accounts command
-var accountsCmd = &cobra.Command{
-	Use:   "accounts",
-	Short: "List current accounts (ADMIN ONLY)",
-	Long:  `List the account name and the API keys for all accounts in the system`,
+// accountCmd represents the accounts command
+var accountCmd = &cobra.Command{
+	Use:     "account",
+	Aliases: []string{"accounts"},
+	Short:   "List current accounts (ADMIN ONLY)",
+	Long:    `List the account name and the API keys for all accounts in the system`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api.Connect(config.CurrentToken())
 		result, err := api.AccountsList()
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
@@ -52,17 +52,6 @@ var accountsCmd = &cobra.Command{
 
 func init() {
 	if config.Admin() {
-		RootCmd.AddCommand(accountsCmd)
+		RootCmd.AddCommand(accountCmd)
 	}
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// accountsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// accountsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 }

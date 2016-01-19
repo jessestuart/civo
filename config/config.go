@@ -30,12 +30,12 @@ func createNewJSONConfig(filename string) {
 	newConfig.SetP(false, "meta.admin")
 	newConfig.SetP("https://api.civo.com", "meta.url")
 	newConfig.SetP("1", "meta.version")
-	ioutil.WriteFile(filename, []byte(newConfig.String()), 0600)
+	ioutil.WriteFile(filename, []byte(newConfig.StringIndent("", "  ")), 0600)
 }
 
 func save() {
 	filename := os.ExpandEnv("$HOME/.civo.json")
-	ioutil.WriteFile(filename, []byte(Config.String()), 0600)
+	ioutil.WriteFile(filename, []byte(Config.StringIndent("", "  ")), 0600)
 }
 
 func getBool(path string) bool {

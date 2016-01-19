@@ -18,3 +18,7 @@ func AccountCreate(name string) (json *gabs.Container, err error) {
 func AccountDelete(name string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/accounts/"+name, HTTPDelete, "")
 }
+
+func AccountReset(name string) (json *gabs.Container, err error) {
+	return makeJSONCall(config.URL()+"/v1/accounts/"+name, HTTPPut, fmt.Sprintf("name=%s", name))
+}

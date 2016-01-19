@@ -26,16 +26,16 @@ import (
 var accountDeleteName string
 
 var accountDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete an account",
-	Long:  `Given a name, delete its account and all instances`,
+	Use:     "delete",
+	Short:   "Delete an account",
+	Aliases: []string{"destroy", "remove"},
+	Long:    `Given a name, delete its account and all instances`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if accountDeleteName == "" {
 			fmt.Println("You need to specify a name with --name in order to delete an account")
 			os.Exit(-3)
 		}
 
-		api.Connect(config.CurrentToken())
 		_, err := api.AccountDelete(accountDeleteName)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
@@ -45,6 +45,8 @@ var accountDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	accountsCmd.AddCommand(accountDeleteCmd)
-	accountDeleteCmd.Flags().StringVarP(&accountDeleteName, "name", "n", "", "Name of the account to delete")
+	if config.Admin() {
+		accountCmd.AddCommand(accountDeleteCmd)
+		accountDeleteCmd.Flags().StringVarP(&accountDeleteName, "name", "n", "", "Name of the account to delete")
+	}
 }

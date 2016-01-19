@@ -19,23 +19,23 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
-	"github.com/absolutedevops/civo/config"
 	"github.com/spf13/cobra"
 )
 
 var accountCreateName string
 
 var accountCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create a new account",
-	Long:  `Given a name, create an account with a new API key for it`,
+	Use:     "create",
+	Aliases: []string{"new", "build", "register"},
+	Short:   "Create a new account",
+	Example: "create --name testuser",
+	Long:    `Given a name, create an account with a new API key for it`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if accountCreateName == "" {
 			fmt.Println("You need to specify a name with --name in order to create an account")
 			os.Exit(-3)
 		}
 
-		api.Connect(config.CurrentToken())
 		_, err := api.AccountCreate(accountCreateName)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
@@ -45,6 +45,6 @@ var accountCreateCmd = &cobra.Command{
 }
 
 func init() {
-	accountsCmd.AddCommand(accountCreateCmd)
+	accountCmd.AddCommand(accountCreateCmd)
 	accountCreateCmd.Flags().StringVarP(&accountCreateName, "name", "n", "", "Name of the account; lowercase, hyphen separated")
 }
