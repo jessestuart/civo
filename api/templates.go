@@ -32,19 +32,3 @@ func TemplateUpdate(params TemplateParams) (json *gabs.Container, err error) {
 func TemplateFind(id string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/templates/"+id, HTTPGet, "")
 }
-
-// func InstanceReboot(id string, hard bool) (json *gabs.Container, err error) {
-// 	if hard {
-// 		return makeJSONCall(config.URL()+"/v1/instances/"+id+"/hard_reboots", HTTPPost, "")
-// 	} else {
-// 		return makeJSONCall(config.URL()+"/v1/instances/"+id+"/soft_reboots", HTTPPost, "")
-// 	}
-// }
-//
-// func InstanceDestroy(id string) (json *gabs.Container, err error) {
-// 	return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPDelete, "")
-// }
-//
-// func InstanceUpgrade(id, size string) (json *gabs.Container, err error) {
-// 	return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPPut, "size="+size)
-// }
