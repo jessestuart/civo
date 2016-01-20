@@ -13,6 +13,9 @@ echo "Building Linux version"
 GOOS=linux GOARCH=amd64 go build ./civo.go
 mv civo bin/linux/
 
+cd bin
+zip -r civo-v$version.zip INSTALL.md linux macosx
+
 git tag v$version
 git push --tags
 open https://github.com/absolutedevops/civo/releases/new?tag=v$version
