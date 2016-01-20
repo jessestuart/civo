@@ -15,6 +15,7 @@ mv civo bin/linux/
 
 cd bin
 zip -r civo-v$version.zip INSTALL.md linux macosx
+cd ../
 
 git tag v$version
 git push --tags
