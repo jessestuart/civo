@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/absolutedevops/civo/config"
 	"github.com/jeffail/gabs"
 	"github.com/parnurzeal/gorequest"
 )
@@ -19,13 +20,9 @@ const (
 	HTTPDelete
 )
 
-func Connect(token string) {
-	CurrentToken = token
-}
-
 func requestHeaders() map[string]string {
 	headers := make(map[string]string)
-	headers["Authorization"] = fmt.Sprintf("bearer %s", CurrentToken)
+	headers["Authorization"] = fmt.Sprintf("bearer %s", config.CurrentToken())
 	headers["User-agent"] = "Civo Go client v1.0"
 	return headers
 }

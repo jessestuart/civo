@@ -69,7 +69,7 @@ func CurrentToken() string {
 		save()
 		return token.Data().(string)
 	}
-	fmt.Println("You haven't got a token saved, ask your provider for one and save it using 'civo tokens:save'")
+	fmt.Println("You haven't got a token saved, ask your provider for one and save it using 'civo tokens save'")
 	os.Exit(-1)
 	return ""
 }

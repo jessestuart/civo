@@ -18,8 +18,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/absolutedevops/civo/api"
-	"github.com/absolutedevops/civo/config"
 	toml "github.com/pelletier/go-toml"
 	"github.com/spf13/cobra"
 )
@@ -46,7 +44,6 @@ func Execute() {
 }
 
 func init() {
-	api.Connect(config.CurrentToken())
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
