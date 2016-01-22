@@ -40,7 +40,7 @@ var templateUpdateCmd = &cobra.Command{
 	Long:    `Update a template with new parameters for people to use to build images from`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if templateUpdateID == "" {
-			fmt.Println("You need to specify a name with --name in order to update a template")
+			fmt.Println("You need to specify a name with --id in order to update a template")
 			os.Exit(-3)
 		}
 

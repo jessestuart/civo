@@ -26,7 +26,7 @@ var instanceCreateName string
 var instanceCreateSize string
 var instanceCreateRegion string
 var instanceCreateSSHKey string
-var instanceCreatePublicIP bool
+instanceCreatePublicIP := true
 var instanceCreateTemplate string
 var instanceCreateInitialUser string
 
