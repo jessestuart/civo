@@ -26,7 +26,7 @@ var instanceCreateName string
 var instanceCreateSize string
 var instanceCreateRegion string
 var instanceCreateSSHKey string
-instanceCreatePublicIP := true
+var instanceCreatePublicIP bool
 var instanceCreateTemplate string
 var instanceCreateInitialUser string
 
@@ -63,6 +63,7 @@ var instanceCreateCmd = &cobra.Command{
 }
 
 func init() {
+	instanceCreatePublicIP = true
 	instanceCmd.AddCommand(instanceCreateCmd)
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateName, "name", "n", "", "Name of the account; lowercase, hyphen separated. If you don't specify one, a random one will be used.")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSize, "size", "s", "g1.small", "The size from 'civo sizes'")
