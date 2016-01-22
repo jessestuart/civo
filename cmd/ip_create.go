@@ -28,7 +28,7 @@ var ipCreateInstance string
 
 var ipCreateCommand = &cobra.Command{
 	Use:     "create",
-	Aliases: []string{"new", "allocate"},
+	Aliases: []string{"new", "allocate", "add"},
 	Short:   "Add a new IP address",
 	Example: "civo ip add --public [name or ID]",
 	Long:    `Add a new private IP address, or a private/public IP address pair to a specified instance`,
