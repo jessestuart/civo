@@ -77,3 +77,80 @@ $ civo template
 +--------------------+------------------------------------------------------------------------+
 ```
 
+
+## Managing instances
+
+To view the list of your currently running instances you can simply run:
+
+```
+civo instance
+```
+
+This will output a table listing the instances currently in your account:
+
+```
++----------+-------------------+----------+-------------------------------+--------+------+--------------+
+|    ID    |       Name        |   Size   |         IP Addresses          | Status | User |   Password   |
++----------+-------------------+----------+-------------------------------+--------+------+--------------+
+| 8043d0e7 | test1.example.com | g1.small | 10.0.0.2=>31.28.88.103        | ACTIVE | civo | jioAQfSDffFS |
++----------+-------------------+----------+-------------------------------+--------+------+--------------+
+```
+
+Creating an instance is a simple command away (remember, if you can't remember the parameters `civo instance create -h` is there to help you) using something like:
+
+```
+civo instance create --name test2.example.com --size g1.small \
+  --region svg1 --ssh-key default --template ubuntu-14.04 --public-ip
+```
+
+If you don't specify a name, a random one will be created for you.
+
+**Note:** Specifying the name will set the hostname on the machine but won't affect DNS resolution, currently that's up to you to provide separately.
+
+If you decide you don't need an instance any more you can remove it by simply calling `civo instance destroy` passing in either the ID or the name, using the details above as an example:
+
+```
+civo instance destroy 8043d0e7
+civo instance destroy test1.example.com
+```
+
+**Note:** The machine will be forever destroyed at this point, you can't get the data back from the hard drive afterwards.
+
+If your machine gets stuck you can restart it with (again using either the ID or the name):
+
+```
+civo instance reboot 8043d0e7
+```
+
+If it's *really* stuck (i.e. hard kernel lock) then you can do the cloud equivalent of unplugging it and plugging it back in with the addition of the hard switch:
+
+```
+civo instance reboot --hard 8043d0e7
+```
+
+
+## Quota
+
+All Civo users have a limited quota applied to their account (to stop errant scripts from filling up the cloud with a million instances).  You can view your current quota using a command like this:
+
+```
+$ civo quota
++---------------------------------------+------+-------+
+|                 Title                 | Used | Limit |
++---------------------------------------+------+-------+
+| Number of instances                   |    0 |    10 |
+| Total CPU cores                       |    0 |    20 |
+| Total RAM (MB)                        |    0 |  5120 |
+| Total disk space (GB)                 |    0 |   250 |
+| Disk volumes                          |    0 |    10 |
+| Disk snapshots                        |    0 |    30 |
+| Public IP addresses                   |    0 |    10 |
+| Private subnets                       |    0 |     1 |
+| Private networks                      |    0 |     1 |
+| Security groups                       |    0 |    10 |
+| Security group rules                  |    0 |   100 |
+| Number of ports (network connections) |    0 |    20 |
++---------------------------------------+------+-------+
+```
+
+If you want to increase them, contact your Civo cloud provider.
