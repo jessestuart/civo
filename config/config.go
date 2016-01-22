@@ -39,13 +39,19 @@ func save() {
 }
 
 func getBool(path string) bool {
-	value, _ := Config.Path(path).Data().(bool)
-	return value
+	if Config.Path(path) != nil {
+		value, _ := Config.Path(path).Data().(bool)
+		return value
+	}
+	return false
 }
 
 func getString(path string) string {
-	value, _ := Config.Path(path).Data().(string)
-	return value
+	if Config.Path(path) != nil {
+		value, _ := Config.Path(path).Data().(string)
+		return value
+	}
+	return ""
 }
 
 func Admin() bool {
