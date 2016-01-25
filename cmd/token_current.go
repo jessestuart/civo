@@ -27,10 +27,13 @@ var tokenCurrentName string
 // tokenCurrentCmd represents the accounts command
 var tokenCurrentCmd = &cobra.Command{
 	Use:     "current",
-	Aliases: []string{"default"},
+	Aliases: []string{"default", "use", "choose", "select"},
 	Short:   "Change your current token",
 	Long:    `Choose which token the command line client should use in future connections`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if tokenCurrentName == "" && len(args) > 0 {
+			tokenCurrentName = args[0]
+		}
 		if tokenCurrentName == "" {
 			fmt.Println("You need to specify a name with --name in order to set the token as the current one")
 			os.Exit(-3)

@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/absolutedevops/civo/config"
 	toml "github.com/pelletier/go-toml"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,7 @@ var Config *toml.TomlTree
 var RootCmd = &cobra.Command{
 	Use:   "civo",
 	Short: "Control your Civo cloud instances",
-	Long:  `A command line client for interacting with the Civo API for cloud instances.`,
+	Long:  `Version ` + config.VERSION + ` of the Civo command line client for interacting with the Civo API for cloud instances.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

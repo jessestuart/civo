@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=$(cat VERSION| tr -d '\n')
+version=$(cat config/config.go | grep VERSION | cut -d'"' -f 2)
 
 mkdir -p bin/macosx/
 mkdir -p bin/linux/
