@@ -43,14 +43,14 @@ var templateDetailsCmd = &cobra.Command{
 			return
 		}
 		// fmt.Println(res.String())
-		fmt.Printf("%-20s: %s\n", "ID", res.Path("template.id").Data().(string))
-		fmt.Printf("%-20s: %s\n", "Name", res.Path("template.name").Data().(string))
-		fmt.Printf("%-20s: %s\n", "Image ID", res.Path("template.image_id").Data().(string))
-		fmt.Printf("%-20s: %s\n", "Short Description", res.Path("template.short_description").Data().(string))
-		fmt.Printf("%-20s: %s\n", "Description", res.Path("template.description").Data().(string))
+		fmt.Printf("%-20s: %s\n", "ID", res.Path("id").Data().(string))
+		fmt.Printf("%-20s: %s\n", "Name", res.Path("name").Data().(string))
+		fmt.Printf("%-20s: %s\n", "Image ID", res.Path("image_id").Data().(string))
+		fmt.Printf("%-20s: %s\n", "Short Description", res.Path("short_description").Data().(string))
+		fmt.Printf("%-20s: %s\n", "Description", res.Path("description").Data().(string))
 		fmt.Println("")
 		fmt.Println(">>>>> Cloud Config <<<<<")
-		fmt.Println(res.Path("template.cloud_config").Data().(string))
+		fmt.Println(res.Path("cloud_config").Data().(string))
 	},
 }
 

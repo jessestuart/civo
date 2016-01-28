@@ -50,12 +50,12 @@ var templateUpdateCmd = &cobra.Command{
 			fmt.Printf("An error occured: ", err)
 			return
 		}
-		params.ID = res.Path("template.id").Data().(string)
-		params.Name = res.Path("template.name").Data().(string)
-		params.ImageID = res.Path("template.image_id").Data().(string)
-		params.ShortDescription = res.Path("template.short_description").Data().(string)
-		params.Description = res.Path("template.description").Data().(string)
-		params.CloudConfig = res.Path("template.cloud_config").Data().(string)
+		params.ID = res.Path("id").Data().(string)
+		params.Name = res.Path("name").Data().(string)
+		params.ImageID = res.Path("image_id").Data().(string)
+		params.ShortDescription = res.Path("short_description").Data().(string)
+		params.Description = res.Path("description").Data().(string)
+		params.CloudConfig = res.Path("cloud_config").Data().(string)
 
 		if templateUpdateName != "" {
 			params.Name = templateUpdateName
