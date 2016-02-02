@@ -34,13 +34,18 @@ var snapshotDestroyCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		name := args[0]
-		_, err := api.InstanceDestroy(name)
+		search := args[0]
+		id := api.SnapshotFind(search)
+		if id == "" {
+			fmt.Printf("Unable to find a snapshot matching '%s'", search)
+			return
+		}
+		_, err := api.SnapshotDestroy(id)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
 		}
-		fmt.Println("Destroying snapshot with name ", name)
+		fmt.Println("Destroying snapshot ", search)
 	},
 }
 

@@ -39,7 +39,7 @@ var snapshotCmd = &cobra.Command{
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
-		table.SetHeader([]string{"Name", "Instance", "Requested At", "Completed At", "Status", "Progress"})
+		table.SetHeader([]string{"Name", "Instance", "Requested At", "Completed At", "Status", "Size (GB)"})
 		items, _ := result.S("items").Children()
 		for _, child := range items {
 			parts := strings.Split(child.S("instance_id").Data().(string), "-")
@@ -51,7 +51,7 @@ var snapshotCmd = &cobra.Command{
 				child.S("requested_at").Data().(string),
 				child.S("completed_at").Data().(string),
 				child.S("status").Data().(string),
-				fmt.Sprintf("%.0f", child.S("progress").Data().(float64)) + "%",
+				fmt.Sprintf("%.0f", child.S("size_gb").Data().(float64)),
 			})
 		}
 		table.Render()

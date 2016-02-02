@@ -20,8 +20,8 @@ func SnapshotCreate(name, instance_id string, safe bool) (json *gabs.Container, 
 	return makeJSONCall(config.URL()+"/v1/snapshots/"+name, HTTPPut, "instance_id="+instance_id+"&safe="+saveVal)
 }
 
-func SnapshotDestroy(name string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/snapshots/"+name, HTTPDelete, "")
+func SnapshotDestroy(id string) (json *gabs.Container, err error) {
+	return makeJSONCall(config.URL()+"/v1/snapshots/"+id, HTTPDelete, "")
 }
 
 // Utility functions ---------------------------------------------------------------------------------------------------
@@ -35,20 +35,18 @@ func SnapshotFind(search string) string {
 	}
 	items, _ := snapshots.S("items").Children()
 	for _, child := range items {
-		id := child.S("id").Data().(string)
 		name := child.S("name").Data().(string)
-		if strings.Contains(id, search) {
+		if name == search {
 			if ret != "" {
 				return ""
 			} else {
-				ret = id
+				ret = name
 			}
-		}
-		if strings.Contains(name, search) {
+		} else if strings.Contains(name, search) {
 			if ret != "" {
 				return ""
 			} else {
-				ret = id
+				ret = name
 			}
 		}
 	}
