@@ -10,7 +10,7 @@ import (
 
 var Config *gabs.Container
 
-const VERSION string = "0.9.15"
+const VERSION string = "0.9.16"
 
 func LoadConfig() {
 	filename := os.ExpandEnv("$HOME/.civo.json")

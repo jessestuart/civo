@@ -42,6 +42,10 @@ func InstanceDestroy(id string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPDelete, "")
 }
 
+func InstanceRestore(id, snapshot string) (json *gabs.Container, err error) {
+	return makeJSONCall(config.URL()+"/v1/instances/"+id+"/restore", HTTPPut, "snapshot="+snapshot)
+}
+
 func InstanceUpgrade(id, size string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPPut, "size="+size)
 }
