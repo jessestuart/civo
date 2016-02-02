@@ -10,7 +10,7 @@ import (
 
 var Config *gabs.Container
 
-const VERSION string = "0.9.11"
+const VERSION string = "0.9.12"
 
 func LoadConfig() {
 	filename := os.ExpandEnv("$HOME/.civo.json")
@@ -110,5 +110,10 @@ func TokenCurrent() string {
 
 func TokenSetCurrent(name string) {
 	Config.SetP(name, "meta.current_token")
+	save()
+}
+
+func TokenSetURL(url string) {
+	Config.SetP(name, "meta.url")
 	save()
 }
