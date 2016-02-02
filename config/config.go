@@ -114,6 +114,6 @@ func TokenSetCurrent(name string) {
 }
 
 func TokenSetURL(url string) {
-	Config.SetP(name, "meta.url")
+	Config.SetP(url, "meta.url")
 	save()
 }
