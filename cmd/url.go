@@ -25,8 +25,8 @@ var urlValue string
 
 // urlCmd represents the accounts command
 var urlCmd = &cobra.Command{
-	Use:     "current",
-	Aliases: []string{"default", "use", "choose", "select"},
+	Use:     "url",
+	Aliases: []string{"api", "server"},
 	Short:   "Change your current API URL",
 	Long:    `Choose which URL the command line client should use in future connections`,
 	Run: func(cmd *cobra.Command, args []string) {
