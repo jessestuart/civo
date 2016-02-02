@@ -45,7 +45,7 @@ var urlCmd = &cobra.Command{
 
 func init() {
 	if config.Admin() {
-		RootCmd.AddCommand(accountCmd)
+		RootCmd.AddCommand(urlCmd)
 		urlCmd.Flags().StringVarP(&urlValue, "url", "u", "", "The URL of the API server to connect to")
 	}
 }
