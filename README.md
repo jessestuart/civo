@@ -128,6 +128,44 @@ If it's *really* stuck (i.e. hard kernel lock) then you can do the cloud equival
 civo instance reboot --hard 8043d0e7
 ```
 
+## Snapshots (backups)
+
+If you want to take a snapshot of an instance, you can do this using a single command line like this:
+
+```
+civo snapshot create --name my-backup --instance 8043d0e7 --safe
+```
+
+The name can be anything you choose, it won't conflict if you create two snapshots with the same name (but it will make it harder for you to remember which is which).  The instance has to be part of the ID or a unique part of the hostname.  The `--safe` is optional - without this switch it will snapshot your instance while it runs, with the flag it will shut the instance down first, take a snapshot then start it back up.  The reason it's referred to as `safe` is that if you snapshot a running instance, any database server may be the middle of rewriting files for example, leaving them in a half-rewritten and hence corrupted state. If you know your machine is in a good state (say it's an application server), then you can snapshot while it's running.
+
+## Firewalls
+
+By default all ports and protocols are open on your instance.  We would recommend either using something like (iptables)[http://netfilter.org/projects/iptables/] or (Uncomplicated Fire Wall)[https://help.ubuntu.com/community/UFW] on the instance, or using the Civo firewall functionality which sits outside your instance (and hence can't be turned off if the machine is compromised).
+
+The first step is to create a new firewall with:
+
+```
+civo firewall create --name my-firewall
+```
+
+For confirmation that this has worked you can run `civo firewall` to list the firewalls. Then you can add rules to it with commands like (to allow incoming SSH and pings):
+
+```
+civo firewall rules create my-firewall -p tcp -s 22
+civo firewall rules create my-firewall -p icmp
+```
+
+You can check that it's configured correctly by running `civo firewall rules my-firewall`. Now that you're sure your firewall is configured, you can assign it to one or more instances with:
+
+```
+civo instances firewall 8043d0e7 --firewall my-firewall
+```
+
+If you make a mistake at any point, you can revert to the default firewall by simply running the same command without `--firewall ...`, for example:
+
+```
+civo instances firewall 8043d0e7
+```
 
 ## Quota
 
