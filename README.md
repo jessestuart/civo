@@ -140,7 +140,7 @@ The name can be anything you choose, it won't conflict if you create two snapsho
 
 ## Firewalls
 
-By default all ports and protocols are open on your instance.  We would recommend either using something like (iptables)[http://netfilter.org/projects/iptables/] or (Uncomplicated Fire Wall)[https://help.ubuntu.com/community/UFW] on the instance, or using the Civo firewall functionality which sits outside your instance (and hence can't be turned off if the machine is compromised).
+By default all ports and protocols are open on your instance.  We would recommend either using something like [iptables](http://netfilter.org/projects/iptables/) or [Ucomplicated Fire Wall](https://help.ubuntu.com/community/UFW) on the instance, or using the Civo firewall functionality which sits outside your instance (and hence can't be turned off if the machine is compromised).
 
 The first step is to create a new firewall with:
 
