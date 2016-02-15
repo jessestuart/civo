@@ -47,12 +47,12 @@ var firewallRuleCreateCmd = &cobra.Command{
 			Direction: firewallRuleCreateDirection,
 		}
 
-		_, err := api.FirewallRuleCreate(firewallRuleCreateName, params)
+		result, err := api.FirewallRuleCreate(firewallRuleCreateName, params)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
 		}
-		fmt.Printf("Creating a firewall rule to allow '%s' %s access to ports '%s/%s' on firewall '%s'\n", firewallRuleCreateCIDR, firewallRuleCreateDirection, firewallRuleCreateStartPort, firewallRuleCreateEndPort, firewallRuleCreateName)
+		fmt.Printf("Creating a firewall rule to allow '%s' %s access to ports '%s/%s' on firewall '%s' with ID '%d'\n", firewallRuleCreateCIDR, firewallRuleCreateDirection, firewallRuleCreateStartPort, firewallRuleCreateEndPort, firewallRuleCreateName, result.S("id").Data().(string))
 	},
 }
 
