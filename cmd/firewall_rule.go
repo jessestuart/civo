@@ -51,7 +51,7 @@ var firewallRuleCmd = &cobra.Command{
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
 		table.SetHeader([]string{"ID", "Protocol", "Port", "CIDR", "Direction"})
-		items, _ := result.S("items").Children()
+		items, _ := result.Children()
 		for _, child := range items {
 			startPort := (child.S("start_port").Data().(string))
 			endPort := (child.S("end_port").Data().(string))
