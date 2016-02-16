@@ -40,7 +40,7 @@ var snapshotCmd = &cobra.Command{
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
 		table.SetHeader([]string{"Name", "Instance", "Requested At", "Completed At", "Status", "Size (GB)"})
-		items, _ := result.S("items").Children()
+		items, _ := result.Children()
 		for _, child := range items {
 			parts := strings.Split(child.S("instance_id").Data().(string), "-")
 			instanceId := parts[0]

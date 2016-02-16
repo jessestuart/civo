@@ -40,7 +40,7 @@ var sizeCmd = &cobra.Command{
 		table.SetAutoFormatHeaders(false)
 		table.SetHeader([]string{"Name", "Specification"})
 		table.SetAutoWrapText(false)
-		items, _ := result.S("items").Children()
+		items, _ := result.Children()
 		for _, child := range items {
 			table.Append([]string{
 				child.S("name").Data().(string),

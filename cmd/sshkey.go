@@ -41,7 +41,7 @@ var sshKeyCommand = &cobra.Command{
 		table.SetAutoFormatHeaders(false)
 		table.SetAutoWrapText(false)
 		table.SetHeader([]string{"Name", "Label"})
-		items, _ := result.S("items").Children()
+		items, _ := result.Children()
 		for _, child := range items {
 			table.Append([]string{
 				child.S("name").Data().(string),

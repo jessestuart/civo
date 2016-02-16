@@ -33,7 +33,7 @@ func SnapshotFind(search string) string {
 		fmt.Println("DEBUG: Returning early because err is", err)
 		return ret
 	}
-	items, _ := snapshots.S("items").Children()
+	items, _ := snapshots.Children()
 	for _, child := range items {
 		name := child.S("name").Data().(string)
 		if name == search {

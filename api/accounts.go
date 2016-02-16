@@ -30,7 +30,7 @@ func AccountFindByToken(token string) string {
 		return ""
 	}
 
-	items, _ := accounts.S("items").Children()
+	items, _ := accounts.Children()
 	for _, child := range items {
 		if child.S("api_key").Data().(string) == token {
 			return child.S("username").Data().(string)

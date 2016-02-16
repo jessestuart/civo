@@ -63,7 +63,7 @@ func InstanceFind(search string) string {
 		fmt.Println("DEBUG: Returning early because err is", err)
 		return ret
 	}
-	items, _ := instances.S("items").Children()
+	items, _ := instances.Children()
 	for _, child := range items {
 		id := child.S("id").Data().(string)
 		name := child.S("hostname").Data().(string)

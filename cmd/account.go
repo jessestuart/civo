@@ -40,7 +40,7 @@ var accountCmd = &cobra.Command{
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
 		table.SetHeader([]string{"Account Name", "API Key"})
-		items, _ := result.S("items").Children()
+		items, _ := result.Children()
 		for _, child := range items {
 			table.Append([]string{
 				child.S("username").Data().(string),

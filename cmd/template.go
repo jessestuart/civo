@@ -40,7 +40,7 @@ var templateCmd = &cobra.Command{
 		table.SetAutoFormatHeaders(false)
 		table.SetAutoWrapText(false)
 		table.SetHeader([]string{"ID", "Description"})
-		items, _ := result.S("items").Children()
+		items, _ := result.Children()
 		for _, child := range items {
 			table.Append([]string{
 				child.S("id").Data().(string),

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/absolutedevops/civo/config"
@@ -56,11 +55,7 @@ func makeJSONCall(url string, method HTTPMethod, data string) (*gabs.Container, 
 	if body != "" {
 		jsonObject, err := gabs.ParseJSON([]byte(body))
 		if err != nil {
-			var object interface{}
-			jsonObject := gabs.New()
-			_ = json.Unmarshal([]byte([]byte(body)), &object)
-			jsonObject.SetP(object, "items")
-			return jsonObject, nil
+			return nil, err
 		}
 		return jsonObject, nil
 	}
