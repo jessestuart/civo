@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	"github.com/absolutedevops/civo/api"
-	"github.com/absolutedevops/civo/config"
 	"github.com/spf13/cobra"
 )
 
@@ -82,13 +81,11 @@ var templateCreateCmd = &cobra.Command{
 }
 
 func init() {
-	if config.Admin() {
-		templateCmd.AddCommand(templateCreateCmd)
-		templateCreateCmd.Flags().StringVarP(&templateCreateID, "id", "", "", "ID of the template; lowercase, hyphen separated")
-		templateCreateCmd.Flags().StringVarP(&templateCreateName, "name", "n", "", "A nice name to be used for the template")
-		templateCreateCmd.Flags().StringVarP(&templateCreateImageId, "image-id", "i", "", "The glance ID of the base filesystem image")
-		templateCreateCmd.Flags().StringVarP(&templateCreateDescription, "description", "d", "", "A full/long multiline description")
-		templateCreateCmd.Flags().StringVarP(&templateCreateShortDescription, "short-description", "s", "", "A one line short summary of the template")
-		templateCreateCmd.Flags().StringVarP(&templateCreateCloudInitFile, "cloud-init-file", "c", "", "The filename of a file to be used as user-data/cloud-init")
-	}
+	templateCmd.AddCommand(templateCreateCmd)
+	templateCreateCmd.Flags().StringVarP(&templateCreateID, "id", "", "", "ID of the template; lowercase, hyphen separated")
+	templateCreateCmd.Flags().StringVarP(&templateCreateName, "name", "n", "", "A nice name to be used for the template")
+	templateCreateCmd.Flags().StringVarP(&templateCreateImageId, "image-id", "i", "", "The glance ID of the base filesystem image")
+	templateCreateCmd.Flags().StringVarP(&templateCreateDescription, "description", "d", "", "A full/long multiline description")
+	templateCreateCmd.Flags().StringVarP(&templateCreateShortDescription, "short-description", "s", "", "A one line short summary of the template")
+	templateCreateCmd.Flags().StringVarP(&templateCreateCloudInitFile, "cloud-init-file", "c", "", "The filename of a file to be used as user-data/cloud-init")
 }

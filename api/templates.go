@@ -32,3 +32,7 @@ func TemplateUpdate(params TemplateParams) (json *gabs.Container, err error) {
 func TemplateFind(id string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/templates/"+id, HTTPGet, "")
 }
+
+func TemplateDestroy(id string) (json *gabs.Container, err error) {
+	return makeJSONCall(config.URL()+"/v1/templates/"+id, HTTPDelete, "")
+}

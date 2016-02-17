@@ -19,43 +19,31 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
-// templateCmd represents the accounts command
-var templateCmd = &cobra.Command{
-	Use:     "template",
-	Aliases: []string{"templates"},
-	Short:   "List all templates",
-	Long:    `List the templates available for building instances from`,
+var templateDestroyCmd = &cobra.Command{
+	Use:     "remove",
+	Short:   "Remove a template",
+	Aliases: []string{"destroy", "delete", "remove"},
+	Long:    `Given an ID that matches an account specific template, remove that template`,
+	Example: "civo template remove [ID]",
 	Run: func(cmd *cobra.Command, args []string) {
-		result, err := api.TemplatesList()
+		if len(args) < 1 {
+			fmt.Println("You need to specify an ID")
+			os.Exit(-1)
+		}
+
+		id := args[0]
+		_, err := api.TemplateDestroy(id)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
 		}
-
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAutoFormatHeaders(false)
-		table.SetAutoWrapText(false)
-		table.SetHeader([]string{"ID", "Description", "Global"})
-		items, _ := result.Children()
-		for _, child := range items {
-			global := "yes"
-			if child.S("tenant").Data().(string) != "" {
-				global = "no"
-			}
-			table.Append([]string{
-				child.S("id").Data().(string),
-				child.S("short_description").Data().(string),
-				global,
-			})
-		}
-		table.Render()
+		fmt.Println("Destroying template ", id)
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(templateCmd)
+	templateCmd.AddCommand(templateDestroyCmd)
 }
