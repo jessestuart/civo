@@ -33,15 +33,7 @@ var quotaCmd = &cobra.Command{
 	Short:   "List the current account token's quota",
 	Long:    `Show all limits for the current account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if quota.Account == "" {
-			quota.Account = api.AccountFindByToken(config.CurrentToken())
-			if quota.Account == "" {
-				fmt.Println("Couldn't find the default account by its token")
-				return
-			}
-		}
-
-		result, err := api.QuotaGet(quota.Account)
+		result, err := api.QuotaGet("")
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return

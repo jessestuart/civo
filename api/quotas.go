@@ -23,7 +23,11 @@ type QuotaParams struct {
 }
 
 func QuotaGet(account string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/quota?username="+account, HTTPGet, "")
+	if account != "" {
+		return makeJSONCall(config.URL()+"/v1/quota?username="+account, HTTPGet, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/quota", HTTPGet, "")
+	}
 }
 
 func QuotaSet(params QuotaParams) (json *gabs.Container, err error) {
