@@ -35,7 +35,6 @@ var sshKeyCommand = &cobra.Command{
 			fmt.Printf("An error occured: ", err)
 			return
 		}
-		fmt.Println(result)
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)

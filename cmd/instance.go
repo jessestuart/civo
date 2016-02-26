@@ -25,6 +25,7 @@ import (
 )
 
 var instanceFullIDs bool
+var instanceTagsSearch string
 
 // instanceCmd represents the accounts command
 var instanceCmd = &cobra.Command{
@@ -33,7 +34,7 @@ var instanceCmd = &cobra.Command{
 	Short:   "List all instances",
 	Long:    `List the instances for the current account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		result, err := api.InstancesList()
+		result, err := api.InstancesList(instanceTagsSearch)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
@@ -41,7 +42,7 @@ var instanceCmd = &cobra.Command{
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
-		table.SetHeader([]string{"ID", "Name", "Size", "Template", "IP Addresses", "Status", "User", "Password", "Firewall"})
+		table.SetHeader([]string{"ID", "Name", "Size", "Template", "IP Addresses", "Status", "User", "Password", "Firewall", "Tags"})
 		items, _ := result.Children()
 		for _, child := range items {
 			ips, _ := child.S("ip_addresses").Children()
@@ -67,6 +68,12 @@ var instanceCmd = &cobra.Command{
 				id = parts[0]
 			}
 
+			tags := make([]string, 0)
+			rawTags, _ := child.S("tags").Children()
+			for _, rawTag := range rawTags {
+				tags = append(tags, rawTag.Data().(string))
+			}
+
 			table.Append([]string{
 				id,
 				child.S("hostname").Data().(string),
@@ -77,6 +84,7 @@ var instanceCmd = &cobra.Command{
 				child.S("initial_user").Data().(string),
 				child.S("initial_password").Data().(string),
 				child.S("firewall_name").Data().(string),
+				strings.Join(tags, ", "),
 			})
 		}
 		table.Render()
@@ -85,5 +93,6 @@ var instanceCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(instanceCmd)
-	instanceCmd.Flags().BoolVarP(&instanceFullIDs, "full-ids", "", false, "Return full IDs for instances")
+	instanceCmd.Flags().StringVarP(&instanceTagsSearch, "tags", "t", "", "Only return instances with these tags (AND not OR)")
+	instanceCmd.Flags().BoolVarP(&instanceFullIDs, "full-ids", "f", false, "Return full IDs for instances")
 }

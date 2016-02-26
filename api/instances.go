@@ -18,11 +18,16 @@ type InstanceParams struct {
 	SSHKey      string `url:"ssh_key"`
 	Template    string `url:"template"`
 	InitialUser string `url:"initial_user"`
+	Tags        string `url:"tags"`
 	PublicIP    bool   `url:"public_ip"`
 }
 
-func InstancesList() (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/instances", HTTPGet, "")
+func InstancesList(tags string) (json *gabs.Container, err error) {
+	if tags != "" {
+		return makeJSONCall(config.URL()+"/v1/instances?tags="+tags, HTTPGet, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/instances", HTTPGet, "")
+	}
 }
 
 func InstanceCreate(params InstanceParams) (json *gabs.Container, err error) {
@@ -50,6 +55,10 @@ func InstanceFirewall(id, firewall string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/instances/"+id+"/firewall", HTTPPut, "name="+firewall)
 }
 
+func InstanceTags(id, tags string) (json *gabs.Container, err error) {
+	return makeJSONCall(config.URL()+"/v1/instances/"+id+"/tags", HTTPPut, "tags="+tags)
+}
+
 func InstanceUpgrade(id, size string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPPut, "size="+size)
 }
@@ -58,7 +67,7 @@ func InstanceUpgrade(id, size string) (json *gabs.Container, err error) {
 
 func InstanceFind(search string) string {
 	ret := ""
-	instances, err := InstancesList()
+	instances, err := InstancesList("")
 	if err != nil {
 		fmt.Println("DEBUG: Returning early because err is", err)
 		return ret

@@ -29,6 +29,7 @@ var instanceCreateSSHKey string
 var instanceCreatePublicIP bool
 var instanceCreateTemplate string
 var instanceCreateInitialUser string
+var instanceCreateTags string
 
 var instanceCreateCmd = &cobra.Command{
 	Use:     "create",
@@ -49,6 +50,7 @@ var instanceCreateCmd = &cobra.Command{
 			Template:    instanceCreateTemplate,
 			InitialUser: instanceCreateInitialUser,
 			PublicIP:    instanceCreatePublicIP,
+			Tags:        instanceCreateTags,
 		}
 		res, err := api.InstanceCreate(params)
 		if err != nil {
@@ -72,4 +74,5 @@ func init() {
 	instanceCreateCmd.Flags().BoolVarP(&instanceCreatePublicIP, "public-ip", "p", true, "Should a public IP address be allocated")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTemplate, "template", "t", "ubuntu-14.04", "The template from 'civo templates'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateInitialUser, "initial-user", "u", "civo", "The default user to create")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateTags, "tags", "g", "", "A space-separated list of tags to use")
 }
