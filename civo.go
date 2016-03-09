@@ -32,7 +32,7 @@ func latestVersionCheck() {
 			fmt.Println(err.Error())
 			return
 		}
-		if latestRelease != config.VERSION {
+		if latestRelease != "v"+config.VERSION {
 			fmt.Println("A new release of the Civo client is available - " + latestRelease + ".")
 			fmt.Println("Please download it from https://github.com/absolutedevops/civo/releases")
 			fmt.Println()
