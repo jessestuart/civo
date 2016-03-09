@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/jeffail/gabs"
 )
 
 var Config *gabs.Container
 
-const VERSION string = "0.9.25"
+const VERSION string = "0.9.26"
 
 func LoadConfig() {
 	filename := os.ExpandEnv("$HOME/.civo.json")
@@ -49,6 +50,9 @@ func getBool(path string) bool {
 }
 
 func getString(path string) string {
+	if Config == nil {
+		LoadConfig()
+	}
 	if Config.Path(path) != nil {
 		value, _ := Config.Path(path).Data().(string)
 		return value
@@ -110,6 +114,23 @@ func TokenCurrent() string {
 
 func TokenSetCurrent(name string) {
 	Config.SetP(name, "meta.current_token")
+	save()
+}
+
+func LatestReleaseCheck() time.Time {
+	result := getString("meta.latest_release_check")
+	if result == "" {
+		return time.Time{}
+	}
+	t, e := time.Parse(time.RFC3339, result)
+	if e != nil {
+		return time.Time{}
+	}
+	return t
+}
+
+func LatestReleaseCheckSet(when time.Time) {
+	Config.SetP(when.Format(time.RFC3339), "meta.latest_release_check")
 	save()
 }
 

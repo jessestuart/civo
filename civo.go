@@ -15,11 +15,34 @@
 package main
 
 import (
+	"fmt"
+	"time"
+
+	"github.com/absolutedevops/civo/api"
 	"github.com/absolutedevops/civo/cmd"
+	"github.com/absolutedevops/civo/config"
 	jww "github.com/spf13/jwalterweatherman"
 )
 
+func latestVersionCheck() {
+	threshold := time.Now().Add(-1 * time.Hour)
+	if config.LatestReleaseCheck().Before(threshold) {
+		latestRelease, err := api.LatestRelease()
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		if latestRelease != config.VERSION {
+			fmt.Println("A new release of the Civo client is available - " + latestRelease + ".")
+			fmt.Println("Please download it from https://github.com/absolutedevops/civo/releases")
+			fmt.Println()
+		}
+	}
+	config.LatestReleaseCheckSet(time.Now())
+}
+
 func main() {
 	jww.SetStdoutThreshold(jww.LevelTrace)
+	latestVersionCheck()
 	cmd.Execute()
 }
