@@ -51,6 +51,10 @@ func InstanceRestore(id, snapshot string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/instances/"+id+"/restore", HTTPPut, "snapshot="+snapshot)
 }
 
+func InstanceRebuild(id string) (json *gabs.Container, err error) {
+	return makeJSONCall(config.URL()+"/v1/instances/"+id+"/rebuild", HTTPPut, "")
+}
+
 func InstanceFirewall(id, firewall string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v1/instances/"+id+"/firewall", HTTPPut, "name="+firewall)
 }
