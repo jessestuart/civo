@@ -33,7 +33,7 @@ var quotaCmd = &cobra.Command{
 	Short:   "List the current account token's quota",
 	Long:    `Show all limits for the current account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		result, err := api.QuotaGet("")
+		result, err := api.QuotaGet(quota.Account)
 		if err != nil {
 			fmt.Printf("An error occured: ", err)
 			return
