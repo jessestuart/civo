@@ -20,6 +20,7 @@ import (
 
 	"github.com/absolutedevops/civo/api"
 	"github.com/absolutedevops/civo/config"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +39,8 @@ var accountResetCmd = &cobra.Command{
 
 		_, err := api.AccountReset(accountResetName)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 	},

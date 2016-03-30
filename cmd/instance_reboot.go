@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +46,8 @@ var instanceRebootCmd = &cobra.Command{
 
 		_, err := api.InstanceReboot(id, instanceRebootHard)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 		fmt.Println("Rebooting instance with ID", id)

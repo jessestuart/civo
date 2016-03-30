@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +50,8 @@ var firewallRuleCreateCmd = &cobra.Command{
 
 		result, err := api.FirewallRuleCreate(firewallRuleCreateName, params)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 		fmt.Printf("Creating a firewall rule to allow '%s' %s access to ports '%s/%s' on firewall '%s' with ID '%s'\n", firewallRuleCreateCIDR, firewallRuleCreateDirection, firewallRuleCreateStartPort, firewallRuleCreateEndPort, firewallRuleCreateName, fmt.Sprintf("%.0f", result.S("id").Data().(float64)))

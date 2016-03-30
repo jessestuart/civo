@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/absolutedevops/civo/config"
@@ -50,7 +51,11 @@ func makeJSONCall(url string, method HTTPMethod, data string) (*gabs.Container, 
 	status := resp.StatusCode
 
 	if !(status >= 200 && status <= 299) {
-		return nil, HTTPErrorNew(fmt.Sprintf("Unable to make Openstack API call: %s", body), url, status)
+		jsonObject, err := gabs.ParseJSON([]byte(body))
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.New(jsonObject.Path("reason").Data().(string))
 	}
 	if body != "" {
 		jsonObject, err := gabs.ParseJSON([]byte(body))

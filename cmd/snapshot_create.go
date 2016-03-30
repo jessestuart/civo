@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -50,7 +51,8 @@ var snapshotCreateCmd = &cobra.Command{
 
 		_, err := api.SnapshotCreate(snapshotCreateName, instanceID, snapshotCreateSafe)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 		fmt.Printf("Creating a snapshot of `%s` with name '%s'\n", instanceID, snapshotCreateName)

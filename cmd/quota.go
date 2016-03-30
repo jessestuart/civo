@@ -20,6 +20,7 @@ import (
 
 	"github.com/absolutedevops/civo/api"
 	"github.com/absolutedevops/civo/config"
+	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +36,8 @@ var quotaCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		result, err := api.QuotaGet(quota.Account)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 
@@ -162,7 +164,8 @@ var quotaCmd = &cobra.Command{
 		if changing {
 			_, err := api.QuotaSet(quota)
 			if err != nil {
-				fmt.Printf("An error occured: ", err)
+				errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+				fmt.Println(errorColor("An error occured:"), err.Error())
 				return
 			}
 			fmt.Println("Quota updated for account", quota.Account)

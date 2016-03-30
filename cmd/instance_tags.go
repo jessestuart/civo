@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +50,8 @@ var instanceTagsCmd = &cobra.Command{
 
 		_, err := api.InstanceTags(id, instanceTagsForRetagging)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 		fmt.Printf("Set tags for instance %s to '%s'\n", id, instanceTagsForRetagging)

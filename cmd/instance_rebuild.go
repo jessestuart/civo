@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +44,8 @@ var instanceRebuildCmd = &cobra.Command{
 
 		_, err := api.InstanceRebuild(id)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 		fmt.Println("Rebuilding instance with ID", id)

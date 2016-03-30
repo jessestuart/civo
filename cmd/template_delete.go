@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +38,8 @@ var templateDestroyCmd = &cobra.Command{
 		id := args[0]
 		_, err := api.TemplateDestroy(id)
 		if err != nil {
-			fmt.Printf("An error occured: ", err)
+			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
 		fmt.Println("Destroying template ", id)
