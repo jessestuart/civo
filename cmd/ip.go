@@ -14,7 +14,10 @@
 
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/absolutedevops/civo/api"
+	"github.com/spf13/cobra"
+)
 
 // ipCommand represents the accounts command
 var ipCommand = &cobra.Command{
@@ -23,5 +26,7 @@ var ipCommand = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(ipCommand)
+	if api.Version() < 2 {
+		RootCmd.AddCommand(ipCommand)
+	}
 }

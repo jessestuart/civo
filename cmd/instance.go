@@ -45,7 +45,7 @@ var instanceCmd = &cobra.Command{
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
 		table.SetHeader([]string{"ID", "Name", "Size", "Template", "IP Addresses", "Status", "User", "Password", "Firewall", "Tags"})
-		items, _ := result.Children()
+		items, _ := result.S("items").Children()
 		for _, child := range items {
 			ips, _ := child.S("ip_addresses").Children()
 			ipAddresses := ""
@@ -85,7 +85,7 @@ var instanceCmd = &cobra.Command{
 				child.S("status").Data().(string),
 				child.S("initial_user").Data().(string),
 				child.S("initial_password").Data().(string),
-				child.S("firewall_name").Data().(string),
+				child.S("firewall_id").Data().(string),
 				strings.Join(tags, ", "),
 			})
 		}

@@ -42,7 +42,12 @@ var tokenSaveCmd = &cobra.Command{
 		}
 
 		config.TokenSave(tokenSaveName, tokenSaveKey)
-		fmt.Printf("Saved token %s, to use it as the default use : civo tokens default --name %s\n", tokenSaveName, tokenSaveName)
+		if config.TokenCurrent() == "" {
+			config.TokenSetCurrent(tokenSaveName)
+			fmt.Printf("Saved token %s and set it as the default token because it's your first token\n", tokenSaveName)
+		} else {
+			fmt.Printf("Saved token %s, to use it as the default use : civo tokens default --name %s\n", tokenSaveName, tokenSaveName)
+		}
 	},
 }
 

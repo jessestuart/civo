@@ -12,14 +12,26 @@ type SshKeyParams struct {
 }
 
 func SshKeysList() (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/sshkeys", HTTPGet, "")
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/sshkeys", HTTPGet, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/sshkeys", HTTPGet, "")
+	}
 }
 
 func SshKeyCreate(params SshKeyParams) (json *gabs.Container, err error) {
 	v, _ := query.Values(params)
-	return makeJSONCall(config.URL()+"/v1/sshkeys", HTTPPost, v.Encode())
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/sshkeys", HTTPPost, v.Encode())
+	} else {
+		return makeJSONCall(config.URL()+"/v1/sshkeys", HTTPPost, v.Encode())
+	}
 }
 
 func SshKeyDelete(name string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/sshkeys/"+name, HTTPDelete, "")
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/sshkeys/"+name, HTTPDelete, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/sshkeys/"+name, HTTPDelete, "")
+	}
 }

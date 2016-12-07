@@ -8,23 +8,46 @@ import (
 )
 
 func AccountsList() (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/accounts", HTTPGet, "")
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/accounts", HTTPGet, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/accounts", HTTPGet, "")
+	}
 }
 
 func AccountCreate(name string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/accounts", HTTPPost, fmt.Sprintf("name=%s", name))
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/accounts", HTTPPost, fmt.Sprintf("name=%s", name))
+	} else {
+		return makeJSONCall(config.URL()+"/v1/accounts", HTTPPost, fmt.Sprintf("name=%s", name))
+	}
 }
 
 func AccountDelete(name string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/accounts/"+name, HTTPDelete, "")
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/accounts/"+name, HTTPDelete, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/accounts/"+name, HTTPDelete, "")
+	}
 }
 
 func AccountReset(name string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/accounts/"+name, HTTPPut, fmt.Sprintf("name=%s", name))
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/accounts/"+name, HTTPPut, fmt.Sprintf("name=%s", name))
+	} else {
+		return makeJSONCall(config.URL()+"/v1/accounts/"+name, HTTPPut, fmt.Sprintf("name=%s", name))
+	}
 }
 
 func AccountFindByToken(token string) string {
-	accounts, err := makeJSONCall(config.URL()+"/v1/accounts", HTTPGet, "")
+	var accounts *gabs.Container
+	var err error
+
+	if Version() == 2 {
+		accounts, err = makeJSONCall(config.URL()+"/v2/accounts", HTTPGet, "")
+	} else {
+		accounts, err = makeJSONCall(config.URL()+"/v1/accounts", HTTPGet, "")
+	}
 	if err != nil {
 		fmt.Println(err)
 		return ""

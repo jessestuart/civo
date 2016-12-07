@@ -40,7 +40,7 @@ var templateCreateCmd = &cobra.Command{
 	Long:    `Create a new template for people to use to build images from`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if templateCreateID == "" {
-			fmt.Println("You need to specify a name with --name in order to create a template")
+			fmt.Println("You need to specify an ID with --id in order to create a template (all lowercase, alphanumeric and dashes only)")
 			os.Exit(-3)
 		}
 		if templateCreateName == "" {

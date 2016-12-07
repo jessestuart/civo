@@ -13,6 +13,8 @@ var CurrentToken string
 
 type HTTPMethod int
 
+var discoveredVersion float64
+
 const (
 	HTTPGet HTTPMethod = iota
 	HTTPPost
@@ -51,6 +53,7 @@ func makeJSONCall(url string, method HTTPMethod, data string) (*gabs.Container, 
 	status := resp.StatusCode
 
 	if !(status >= 200 && status <= 299) {
+		fmt.Println(body)
 		jsonObject, err := gabs.ParseJSON([]byte(body))
 		if err != nil {
 			return nil, err
@@ -65,4 +68,13 @@ func makeJSONCall(url string, method HTTPMethod, data string) (*gabs.Container, 
 		return jsonObject, nil
 	}
 	return nil, nil
+}
+
+func Version() float64 {
+	if discoveredVersion == 0 {
+		result, _ := makeJSONCall(config.URL()+"/ping", HTTPGet, "")
+		discoveredVersion = result.S("version").Data().(float64)
+	}
+
+	return discoveredVersion
 }

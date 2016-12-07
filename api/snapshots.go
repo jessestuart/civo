@@ -9,7 +9,11 @@ import (
 )
 
 func SnapshotsList() (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/snapshots", HTTPGet, "")
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/snapshots", HTTPGet, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/snapshots", HTTPGet, "")
+	}
 }
 
 func SnapshotCreate(name, instance_id string, safe bool) (json *gabs.Container, err error) {
@@ -17,11 +21,19 @@ func SnapshotCreate(name, instance_id string, safe bool) (json *gabs.Container, 
 	if safe {
 		saveVal = "true"
 	}
-	return makeJSONCall(config.URL()+"/v1/snapshots/"+name, HTTPPut, "instance_id="+instance_id+"&safe="+saveVal)
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/snapshots/"+name, HTTPPut, "instance_id="+instance_id+"&safe="+saveVal)
+	} else {
+		return makeJSONCall(config.URL()+"/v1/snapshots/"+name, HTTPPut, "instance_id="+instance_id+"&safe="+saveVal)
+	}
 }
 
 func SnapshotDestroy(id string) (json *gabs.Container, err error) {
-	return makeJSONCall(config.URL()+"/v1/snapshots/"+id, HTTPDelete, "")
+	if Version() == 2 {
+		return makeJSONCall(config.URL()+"/v2/snapshots/"+id, HTTPDelete, "")
+	} else {
+		return makeJSONCall(config.URL()+"/v1/snapshots/"+id, HTTPDelete, "")
+	}
 }
 
 // Utility functions ---------------------------------------------------------------------------------------------------

@@ -25,14 +25,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// sshKeyCommand represents the accounts command
-var sshKeyCommand = &cobra.Command{
-	Use:     "sshkey",
-	Aliases: []string{"sshkeys"},
-	Short:   "List uploaded SSH keys",
-	Long:    `List all the uploaded SSH public keys you can specify when creating an instance`,
+var networkFullIDs bool
+
+// networkCmd represents the accounts command
+var networkCmd = &cobra.Command{
+	Use:     "network",
+	Aliases: []string{"networks"},
+	Short:   "List all networks",
+	Long:    `List the networks for the current account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		result, err := api.SshKeysList()
+		result, err := api.NetworksList()
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
@@ -41,34 +43,33 @@ var sshKeyCommand = &cobra.Command{
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
-		table.SetAutoWrapText(false)
-		if api.Version() == 2 {
-			table.SetHeader([]string{"ID", "Name", "Fingerprint"})
-		} else {
-			table.SetHeader([]string{"Name", "Label"})
-		}
+		table.SetHeader([]string{"ID", "Label", "Default"})
 		items, _ := result.Children()
 		for _, child := range items {
-			if api.Version() == 2 {
-				parts := strings.Split(child.S("id").Data().(string), "-")
-				id := parts[0]
+      var id string
+      if networkFullIDs {
+        id = child.S("id").Data().(string)
+      } else {
+        parts := strings.Split(child.S("id").Data().(string), "-")
+        id = parts[0]
+      }
 
-				table.Append([]string{
-					id,
-					child.S("name").Data().(string),
-					child.S("fingerprint").Data().(string),
-				})
-			} else {
-				table.Append([]string{
-					child.S("name").Data().(string),
-					child.S("label").Data().(string),
-				})
-			}
+      defaultLabel := "no"
+      if (child.S("default").Data().(bool)) {
+        defaultLabel = "yes"
+      }
+
+			table.Append([]string{
+        id,
+				child.S("label").Data().(string),
+				defaultLabel,
+			})
 		}
 		table.Render()
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(sshKeyCommand)
+	RootCmd.AddCommand(networkCmd)
+  networkCmd.Flags().BoolVarP(&networkFullIDs, "full-ids", "f", false, "Return full IDs for networks")
 }

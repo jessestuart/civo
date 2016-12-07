@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/absolutedevops/civo/api"
 	"github.com/fatih/color"
@@ -24,31 +25,61 @@ import (
 )
 
 var sshKeyDeleteName string
+var sshKeyDeleteID string
 
 var sshKeyDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"new", "store"},
 	Short:   "Upload an SSH key",
-	Example: "civo sshkey upload --name default --public-key ~/.ssh/id_rsa.pub",
-	Long:    `Upload an SSH public key, then this can be chosen when creating an instance`,
+	Example: "civo sshkey delete --id f0203e48",
+	Long:    `Delete an SSH public key`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if sshKeyDeleteName == "" {
-			fmt.Println("You need to specify a name with --name in order to remove that key")
+		errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
+
+		if sshKeyDeleteName == "" && sshKeyDeleteID == "" {
+			fmt.Println("You need to specify an ID with --id or a name with --name in order to remove that key")
 			os.Exit(-3)
 		}
 
-		res, err := api.SshKeyDelete(sshKeyDeleteName)
+		keys, err := api.SshKeysList()
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Println(res)
-		fmt.Printf("Deleted SSH key called `%s`\n", sshKeyDeleteName)
+
+		var foundID string
+		var foundName string
+		children, _ := keys.Children()
+		for _, child := range children {
+			if sshKeyDeleteName != "" && child.S("name").Data().(string) == sshKeyDeleteName {
+				foundID = child.S("id").Data().(string)
+				foundName = child.S("name").Data().(string)
+			} else if sshKeyDeleteID != "" && strings.HasPrefix(child.S("id").Data().(string), sshKeyDeleteID) {
+				foundID = child.S("id").Data().(string)
+				foundName = child.S("name").Data().(string)
+			}
+		}
+
+		if foundID != "" {
+			res, err := api.SshKeyDelete(foundID)
+			if err != nil {
+				fmt.Println(errorColor("An error occured:"), err.Error())
+				return
+			}
+			if res.S("result").Data() != nil && res.S("result").Data().(string) == "success" {
+				fmt.Printf("Deleted SSH key called `%s`\n", foundName)
+			} else {
+				fmt.Println(errorColor("An error occured:"), res)
+			}
+		} else {
+			fmt.Printf("Couldn't find that SSH key\n")
+		}
 	},
 }
 
 func init() {
 	sshKeyCommand.AddCommand(sshKeyDeleteCmd)
 	sshKeyDeleteCmd.Flags().StringVarP(&sshKeyDeleteName, "name", "n", "", "The name of the key to be deleted")
+	sshKeyDeleteCmd.Flags().StringVarP(&sshKeyDeleteID, "id", "i", "", "The ID of the key to be deleted")
 }
