@@ -7,7 +7,7 @@ import (
 )
 
 type QuotaParams struct {
-	Account           string `url:"-"`
+	AccountID         string `url:"-"`
 	InstanceCount     string `url:"instance_count_limit"`
 	CpuCore           string `url:"cpu_core_limit"`
 	RamMB             string `url:"ram_mb_limit"`
@@ -32,5 +32,5 @@ func QuotaGet(account string) (json *gabs.Container, err error) {
 
 func QuotaSet(params QuotaParams) (json *gabs.Container, err error) {
 	v, _ := query.Values(params)
-	return makeJSONCall(config.URL()+"/v2/quota/"+params.Account, HTTPPut, v.Encode())
+	return makeJSONCall(config.URL()+"/v2/quota/"+params.AccountID, HTTPPut, v.Encode())
 }

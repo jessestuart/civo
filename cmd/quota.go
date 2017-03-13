@@ -169,6 +169,9 @@ var quotaCmd = &cobra.Command{
 		table.Render()
 
 		if changing {
+			fmt.Println("Updating the quota doesn't work against the v2 API at this moment")
+			fmt.Println("Please use the Civo.com website when logged in as an admin user")
+			os.Exit(-4)
 			_, err := api.QuotaSet(quota)
 			if err != nil {
 				errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
@@ -183,9 +186,7 @@ var quotaCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(quotaCmd)
 	if config.Admin() {
-		fmt.Println("Updating the quota doesn't work against the v2 API at this moment")
-		fmt.Println("Please use the Civo.com website when logged in as an admin user")
-		quotaCmd.Flags().StringVarP(&quota.APIToken, "api-token", "", "", "The API token of the account to update the quota for")
+		quotaCmd.Flags().StringVarP(&quota.AccountID, "account-id", "", "", "The ID of the account to update the quota for")
 		quotaCmd.Flags().StringVarP(&quota.InstanceCount, "instance-count", "i", "", "The limit to the number of instances available")
 		quotaCmd.Flags().StringVarP(&quota.CpuCore, "cpu-core", "c", "", "The limit to the number of CPU cores available")
 		quotaCmd.Flags().StringVarP(&quota.RamMB, "ram-mb", "r", "", "The limit to the amount of RAM (in MB) available")

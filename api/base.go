@@ -52,8 +52,8 @@ func makeJSONCall(url string, method HTTPMethod, data string) (*gabs.Container, 
 	}
 	status := resp.StatusCode
 
-	fmt.Println(">>> ", url)
-	fmt.Println(body)
+	// fmt.Println(">>> ", url)
+	// fmt.Println(body)
 
 	if !(status >= 200 && status <= 299) {
 		jsonObject, err := gabs.ParseJSON([]byte(body))
