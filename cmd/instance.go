@@ -47,19 +47,13 @@ var instanceCmd = &cobra.Command{
 		table.SetHeader([]string{"ID", "Name", "Size", "Template", "IP Addresses", "Status", "User", "Password", "Firewall", "Tags"})
 		items, _ := result.S("items").Children()
 		for _, child := range items {
-			ips, _ := child.S("ip_addresses").Children()
-			ipAddresses := ""
-			for _, ip := range ips {
-				privateIP := ip.S("private_ip").Data().(string)
-				publicIP := ip.S("public_ip").Data().(string)
-				if ipAddresses != "" {
-					ipAddresses = ipAddresses + ", "
-				}
-				if publicIP != "" {
-					ipAddresses = ipAddresses + privateIP + "=>" + publicIP
-				} else {
-					ipAddresses = ipAddresses + privateIP
-				}
+			var ipAddresses string
+			privateIP := child.S("private_ip").Data().(string)
+			publicIP := child.S("public_ip").Data().(string)
+			if publicIP != "" {
+				ipAddresses = privateIP + " => " + publicIP
+			} else {
+				ipAddresses = privateIP
 			}
 
 			var id string

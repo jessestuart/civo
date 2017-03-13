@@ -23,6 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var instanceDestroyInstanceID string
+
 var instanceDestroyCmd = &cobra.Command{
 	Use:     "destroy",
 	Short:   "Destroy an instance",
@@ -30,28 +32,23 @@ var instanceDestroyCmd = &cobra.Command{
 	Long:    `Given a name or partial/whole ID that matches one instance, destroy that instance`,
 	Example: "civo instance delete [name or ID]",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
-			os.Exit(-1)
-		}
-
-		search := args[0]
-		id := api.InstanceFind(search)
-		if id == "" {
+		instanceDestroyInstanceID := api.InstanceFind(instanceDestroyInstanceID)
+		if instanceDestroyInstanceID == "" {
 			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
 			os.Exit(-1)
 		}
 
-		_, err := api.InstanceDestroy(id)
+		_, err := api.InstanceDestroy(instanceDestroyInstanceID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Println("Destroying instance with ID", id)
+		fmt.Println("Destroying instance with ID", instanceDestroyInstanceID)
 	},
 }
 
 func init() {
 	instanceCmd.AddCommand(instanceDestroyCmd)
+	instanceDestroyCmd.Flags().StringVarP(&instanceDestroyInstanceID, "id", "i", "", "The instance ID to reboot")
 }

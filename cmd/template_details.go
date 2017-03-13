@@ -30,7 +30,7 @@ var templateDetailsCmd = &cobra.Command{
 	Use:     "details",
 	Aliases: []string{"show", "info"},
 	Short:   "Show full details about a template",
-	Example: "civo templates details --name ubuntu-70.04",
+	Example: "civo templates details --id ubuntu-70.04",
 	Long:    `Show the full details for a template`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if templateDetailsID == "" {

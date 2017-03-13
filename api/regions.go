@@ -6,9 +6,5 @@ import (
 )
 
 func RegionsList() (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/regions", HTTPGet, "")
-	} else {
-		return makeJSONCall(config.URL()+"/v1/regions", HTTPGet, "")
-	}
+	return makeJSONCall(config.URL()+"/v2/regions", HTTPGet, "")
 }

@@ -31,18 +31,18 @@ var firewallDestroyCmd = &cobra.Command{
 	Example: "civo firewall remove [name]",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			fmt.Println("You need to specify a name")
+			fmt.Println("You need to specify an ID")
 			os.Exit(-1)
 		}
 
-		name := args[0]
-		_, err := api.FirewallDestroy(name)
+		id := args[0]
+		_, err := api.FirewallDestroy(id)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Println("Destroying firewall", name)
+		fmt.Println("Destroying firewall", id)
 	},
 }
 

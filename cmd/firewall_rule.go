@@ -25,25 +25,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var firewallRulesName string
+var firewallRulesID string
 
 // firewallRuleCmd represents the accounts command
 var firewallRuleCmd = &cobra.Command{
 	Use:     "rules",
 	Aliases: []string{"rule"},
 	Short:   "List all firewall rules",
-	Example: "civo firewall rules --name restrictive",
+	Example: "civo firewall rules --id {uuid}",
 	Long:    `List the firewall rules for the specified firewall`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 && firewallRulesName == "" {
-			fmt.Println("You need to specify a firewall name")
+		if len(args) < 1 && firewallRulesID == "" {
+			fmt.Println("You need to specify a firewall ID")
 			os.Exit(-1)
 		}
-		if firewallRulesName == "" {
-			firewallRulesName = args[0]
+		if firewallRulesID == "" {
+			firewallRulesID = args[0]
 		}
 
-		result, err := api.FirewallRules(firewallRulesName)
+		result, err := api.FirewallRules(firewallRulesID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
@@ -65,7 +65,7 @@ var firewallRuleCmd = &cobra.Command{
 			}
 
 			table.Append([]string{
-				fmt.Sprintf("%.0f", child.S("id").Data().(float64)),
+				child.S("id").Data().(string),
 				strings.ToUpper(child.S("protocol").Data().(string)),
 				ports,
 				child.S("cidr").Data().(string),
@@ -78,5 +78,5 @@ var firewallRuleCmd = &cobra.Command{
 
 func init() {
 	firewallCmd.AddCommand(firewallRuleCmd)
-	firewallRuleCmd.Flags().StringVarP(&firewallRulesName, "name", "n", "", "Name of the firewall")
+	firewallRuleCmd.Flags().StringVarP(&firewallRulesID, "id", "i", "", "ID of the firewall")
 }

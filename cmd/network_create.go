@@ -24,6 +24,7 @@ import (
 
 var networkCreateName string
 var networkCreateLabel string
+var networkCreateRegion string
 
 var networkCreateCmd = &cobra.Command{
 	Use:     "create",
@@ -36,11 +37,11 @@ var networkCreateCmd = &cobra.Command{
 			networkCreateName = args[0]
 		}
 
-    if networkCreateLabel == "" {
-      networkCreateLabel = networkCreateName
-    }
+		if networkCreateLabel == "" {
+			networkCreateLabel = networkCreateName
+		}
 
-		_, err := api.NetworkCreate(networkCreateName, networkCreateLabel)
+		_, err := api.NetworkCreate(networkCreateName, networkCreateLabel, networkCreateRegion)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
@@ -54,4 +55,5 @@ func init() {
 	networkCmd.AddCommand(networkCreateCmd)
 	networkCreateCmd.Flags().StringVarP(&networkCreateName, "name", "n", "", "Name of the network; lowercase, hyphen separated. If you don't specify one, a UUID will be used.")
 	networkCreateCmd.Flags().StringVarP(&networkCreateLabel, "label", "l", "", "A nice name for the network; can contain spaces, etc.")
+	networkCreateCmd.Flags().StringVarP(&networkCreateRegion, "region", "r", DefaultRegion, "The region from 'civo regions'")
 }

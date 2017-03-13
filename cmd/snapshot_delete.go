@@ -23,6 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var snapshotDestroyID string
+
 var snapshotDestroyCmd = &cobra.Command{
 	Use:     "remove",
 	Short:   "Remove a snapshot",
@@ -30,27 +32,24 @@ var snapshotDestroyCmd = &cobra.Command{
 	Long:    `Given a name or partial/whole ID that matches one snapshot, remove that snapshot`,
 	Example: "civo snapshot remove [name or ID]",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
+		snapshotDestroyID := api.SnapshotFind(snapshotDestroyID)
+		if snapshotDestroyID == "" {
+			fmt.Println("Couldn't find a single snapshot based on that name or partial/whole ID, it must match exactly one snapshot")
 			os.Exit(-1)
 		}
 
-		search := args[0]
-		id := api.SnapshotFind(search)
-		if id == "" {
-			fmt.Printf("Unable to find a snapshot matching '%s'", search)
-			return
-		}
-		_, err := api.SnapshotDestroy(id)
+		_, err := api.SnapshotDestroy(snapshotDestroyID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Println("Destroying snapshot ", search)
+		fmt.Println("Destroying snapshot ", snapshotDestroyID)
 	},
 }
 
 func init() {
 	snapshotCmd.AddCommand(snapshotDestroyCmd)
+	snapshotDestroyCmd.Flags().StringVarP(&snapshotDestroyID, "id", "i", "", "The snapshot ID or name to delete")
+
 }

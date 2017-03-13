@@ -29,7 +29,7 @@ var instanceCreateRegion string
 var instanceCreateSSHKey string
 var instanceCreatePublicIP bool
 var instanceCreateTemplate string
-var instanceCreateFirewall string
+var instanceCreateFirewallID string
 var instanceCreateNetwork string
 var instanceCreateInitialUser string
 var instanceCreateTags string
@@ -53,6 +53,8 @@ var instanceCreateCmd = &cobra.Command{
 			Template:    instanceCreateTemplate,
 			InitialUser: instanceCreateInitialUser,
 			PublicIP:    instanceCreatePublicIP,
+			NetworkID:   instanceCreateNetwork,
+			FirewallID:  instanceCreateFirewallID,
 			Tags:        instanceCreateTags,
 		}
 		res, err := api.InstanceCreate(params)
@@ -71,16 +73,14 @@ var instanceCreateCmd = &cobra.Command{
 func init() {
 	instanceCreatePublicIP = true
 	instanceCmd.AddCommand(instanceCreateCmd)
-	instanceCreateCmd.Flags().StringVarP(&instanceCreateName, "name", "n", "", "Name of the account; lowercase, hyphen separated. If you don't specify one, a random one will be used.")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateName, "name", "n", "", "Name of the instance; lowercase, hyphen separated. If you don't specify one, a random one will be used.")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSize, "size", "s", "g1.small", "The size from 'civo sizes'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTags, "tags", "g", "", "A space-separated list of tags to use")
-	instanceCreateCmd.Flags().StringVarP(&instanceCreateRegion, "region", "r", "svg1", "The region from 'civo regions'")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateRegion, "region", "r", DefaultRegion, "The region from 'civo regions'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSSHKey, "ssh-key", "k", "default", "The SSH key name from 'civo sshkeys'")
 	instanceCreateCmd.Flags().BoolVarP(&instanceCreatePublicIP, "public-ip", "p", true, "Should a public IP address be allocated")
-	instanceCreateCmd.Flags().StringVarP(&instanceCreateTemplate, "template", "t", "ubuntu-14.04", "The template from 'civo templates'")
-	if api.Version() > 1 {
-		instanceCreateCmd.Flags().StringVarP(&instanceCreateFirewall, "firewall", "f", "default", "The firewall ID or name from 'civo firewalls'")
-		instanceCreateCmd.Flags().StringVarP(&instanceCreateNetwork, "network", "w", "default", "The network ID or name from 'civo networks'")
-	}
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateTemplate, "template", "t", "ubuntu-16.04", "The template from 'civo templates'")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateFirewallID, "firewall", "f", "default", "The firewall ID or name from 'civo firewalls'")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateNetwork, "network", "w", "Default", "The network ID or name from 'civo networks'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateInitialUser, "initial-user", "u", "civo", "The default user to create")
 }

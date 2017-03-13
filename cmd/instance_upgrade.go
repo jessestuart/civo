@@ -24,6 +24,7 @@ import (
 )
 
 var instanceUpgradeSize string
+var instanceUpgradeInstanceID string
 
 var instanceUpgradeCmd = &cobra.Command{
 	Use:     "upgrade",
@@ -32,8 +33,9 @@ var instanceUpgradeCmd = &cobra.Command{
 	Example: "civo instance upgrade --size g1.medium [name or ID]",
 	Long:    `Upgrade the CPU, RAM and SSD disk for an instance with the specifed name or partial/full ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
+		instanceUpgradeInstanceID := api.InstanceFind(instanceUpgradeInstanceID)
+		if instanceUpgradeInstanceID == "" {
+			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
 			os.Exit(-1)
 		}
 		if instanceUpgradeSize == "" {
@@ -41,24 +43,18 @@ var instanceUpgradeCmd = &cobra.Command{
 			os.Exit(-3)
 		}
 
-		search := args[0]
-		id := api.InstanceFind(search)
-		if id == "" {
-			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
-			os.Exit(-1)
-		}
-
-		_, err := api.InstanceUpgrade(id, instanceUpgradeSize)
+		_, err := api.InstanceUpgrade(instanceUpgradeInstanceID, instanceUpgradeSize)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Printf("Resizing instance with ID %s to %s\n", id, instanceUpgradeSize)
+		fmt.Printf("Resizing instance with ID %s to %s\n", instanceUpgradeInstanceID, instanceUpgradeSize)
 	},
 }
 
 func init() {
 	instanceCmd.AddCommand(instanceUpgradeCmd)
+	instanceUpgradeCmd.Flags().StringVarP(&instanceUpgradeInstanceID, "id", "i", "", "The instance ID to reboot")
 	instanceUpgradeCmd.Flags().StringVarP(&instanceUpgradeSize, "size", "s", "", "Upgrade the instance, using a size from `civo sizes`")
 }

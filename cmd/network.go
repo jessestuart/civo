@@ -46,21 +46,21 @@ var networkCmd = &cobra.Command{
 		table.SetHeader([]string{"ID", "Label", "Default"})
 		items, _ := result.Children()
 		for _, child := range items {
-      var id string
-      if networkFullIDs {
-        id = child.S("id").Data().(string)
-      } else {
-        parts := strings.Split(child.S("id").Data().(string), "-")
-        id = parts[0]
-      }
+			var id string
+			if networkFullIDs {
+				id = child.S("id").Data().(string)
+			} else {
+				parts := strings.Split(child.S("id").Data().(string), "-")
+				id = parts[0]
+			}
 
-      defaultLabel := "no"
-      if (child.S("default").Data().(bool)) {
-        defaultLabel = "yes"
-      }
+			defaultLabel := "no"
+			if child.S("default").Data().(bool) {
+				defaultLabel = "yes"
+			}
 
 			table.Append([]string{
-        id,
+				id,
 				child.S("label").Data().(string),
 				defaultLabel,
 			})
@@ -71,5 +71,5 @@ var networkCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(networkCmd)
-  networkCmd.Flags().BoolVarP(&networkFullIDs, "full-ids", "f", false, "Return full IDs for networks")
+	networkCmd.Flags().BoolVarP(&networkFullIDs, "full-ids", "f", false, "Return full IDs for networks")
 }

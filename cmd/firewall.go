@@ -40,10 +40,11 @@ var firewallCmd = &cobra.Command{
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
-		table.SetHeader([]string{"Name", "Instances", "Rules"})
+		table.SetHeader([]string{"ID", "Name", "Instances", "Rules"})
 		items, _ := result.Children()
 		for _, child := range items {
 			table.Append([]string{
+				child.S("id").Data().(string),
 				child.S("name").Data().(string),
 				fmt.Sprintf("%.0f", child.S("instances_count").Data().(float64)),
 				fmt.Sprintf("%.0f", child.S("rules_count").Data().(float64)),

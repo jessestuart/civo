@@ -22,7 +22,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var firewallRuleCreateName string
+var firewallRuleCreateID string
 var firewallRuleCreateProtocol string
 var firewallRuleCreateStartPort string
 var firewallRuleCreateEndPort string
@@ -36,8 +36,8 @@ var firewallRuleCreateCmd = &cobra.Command{
 	Example: "civo firewall rule create --name restrictive",
 	Long:    `Create a new firewall rule for the firewall with the given name`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if firewallRuleCreateName == "" && len(args) > 0 {
-			firewallRuleCreateName = args[0]
+		if firewallRuleCreateID == "" && len(args) > 0 {
+			firewallRuleCreateID = args[0]
 		}
 
 		params := api.FirewallRuleParams{
@@ -48,19 +48,19 @@ var firewallRuleCreateCmd = &cobra.Command{
 			Direction: firewallRuleCreateDirection,
 		}
 
-		result, err := api.FirewallRuleCreate(firewallRuleCreateName, params)
+		result, err := api.FirewallRuleCreate(firewallRuleCreateID, params)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Printf("Creating a firewall rule to allow '%s' %s access to ports '%s/%s' on firewall '%s' with ID '%s'\n", firewallRuleCreateCIDR, firewallRuleCreateDirection, firewallRuleCreateStartPort, firewallRuleCreateEndPort, firewallRuleCreateName, fmt.Sprintf("%.0f", result.S("id").Data().(float64)))
+		fmt.Printf("Creating a firewall rule to allow '%s' %s access to ports '%s/%s' on firewall '%s' with ID '%s'\n", firewallRuleCreateCIDR, firewallRuleCreateDirection, firewallRuleCreateStartPort, firewallRuleCreateEndPort, firewallRuleCreateID, result.S("id").Data().(string))
 	},
 }
 
 func init() {
 	firewallRuleCmd.AddCommand(firewallRuleCreateCmd)
-	firewallRuleCreateCmd.Flags().StringVarP(&firewallRuleCreateName, "name", "n", "", "Name of the firewall; lowercase, hyphen separated. If you don't specify one, a UUID followed by the instance_id will be used.")
+	firewallRuleCreateCmd.Flags().StringVarP(&firewallRuleCreateID, "id", "i", "", "ID of the firewall")
 	firewallRuleCreateCmd.Flags().StringVarP(&firewallRuleCreateProtocol, "protocol", "p", "tcp", "Which internet protocol to filter: tcp, udp or icmp")
 	firewallRuleCreateCmd.Flags().StringVarP(&firewallRuleCreateStartPort, "start", "s", "", "The start of the port range to allow")
 	firewallRuleCreateCmd.Flags().StringVarP(&firewallRuleCreateEndPort, "end", "e", "", "The end of the port range to allow (either a different number to start, the same number or empty for allowing a single port)")

@@ -24,41 +24,33 @@ import (
 )
 
 var instanceTagsForRetagging string
+var instanceTagsInstanceID string
 
 var instanceTagsCmd = &cobra.Command{
 	Use:     "tags",
 	Aliases: []string{"tag", "tagged", "retag"},
 	Short:   "Re-tag an instance",
-	Example: "civo instance tags [name or ID] \"[tag names, space separated]\"",
+	Example: "civo instance tags --id {uuid} --tags \"[tag names, space separated]\"",
 	Long:    `Re-tag an instance with the specifed name or partial/full ID using the list of space separated tags`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
-			os.Exit(-1)
-		}
-
-		search := args[0]
-		id := api.InstanceFind(search)
-		if id == "" {
+		instanceTagsInstanceID := api.InstanceFind(instanceTagsInstanceID)
+		if instanceTagsInstanceID == "" {
 			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
 			os.Exit(-1)
 		}
 
-		if instanceTagsForRetagging == "" && len(args) > 1 {
-			instanceTagsForRetagging = args[1]
-		}
-
-		_, err := api.InstanceTags(id, instanceTagsForRetagging)
+		_, err := api.InstanceTags(instanceTagsInstanceID, instanceTagsForRetagging)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Printf("Set tags for instance %s to '%s'\n", id, instanceTagsForRetagging)
+		fmt.Printf("Set tags for instance %s to '%s'\n", instanceTagsInstanceID, instanceTagsForRetagging)
 	},
 }
 
 func init() {
 	instanceCmd.AddCommand(instanceTagsCmd)
 	instanceTagsCmd.Flags().StringVarP(&instanceTagsForRetagging, "tags", "t", "", "The space separated list of tags")
+	instanceTagsCmd.Flags().StringVarP(&instanceTagsInstanceID, "id", "i", "", "The instance ID to reboot")
 }

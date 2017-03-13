@@ -6,9 +6,5 @@ import (
 )
 
 func SizesList() (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/sizes", HTTPGet, "")
-	} else {
-		return makeJSONCall(config.URL()+"/v1/sizes", HTTPGet, "")
-	}
+	return makeJSONCall(config.URL()+"/v2/sizes", HTTPGet, "")
 }

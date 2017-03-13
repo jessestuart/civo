@@ -24,25 +24,13 @@ type QuotaParams struct {
 
 func QuotaGet(account string) (json *gabs.Container, err error) {
 	if account != "" {
-		if Version() == 2 {
-			return makeJSONCall(config.URL()+"/v2/quota?username="+account, HTTPGet, "")
-		} else {
-			return makeJSONCall(config.URL()+"/v1/quota?username="+account, HTTPGet, "")
-		}
+		return makeJSONCall(config.URL()+"/v2/quota?username="+account, HTTPGet, "")
 	} else {
-		if Version() == 2 {
-			return makeJSONCall(config.URL()+"/v2/quota", HTTPGet, "")
-		} else {
-			return makeJSONCall(config.URL()+"/v1/quota", HTTPGet, "")
-		}
+		return makeJSONCall(config.URL()+"/v2/quota", HTTPGet, "")
 	}
 }
 
 func QuotaSet(params QuotaParams) (json *gabs.Container, err error) {
 	v, _ := query.Values(params)
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/quota/"+params.Account, HTTPPut, v.Encode())
-	} else {
-		return makeJSONCall(config.URL()+"/v1/quota/"+params.Account, HTTPPut, v.Encode())
-	}
+	return makeJSONCall(config.URL()+"/v2/quota/"+params.Account, HTTPPut, v.Encode())
 }

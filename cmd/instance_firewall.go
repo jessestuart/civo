@@ -23,38 +23,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var instanceFirewall string
+var instanceFirewallInstanceID string
+var instanceFirewallID string
 
 var instanceFirewallCmd = &cobra.Command{
 	Use:     "firewall",
 	Aliases: []string{"revert"},
 	Short:   "Firewall an instance",
-	Example: "civo instance restore [name or ID] -f restrictive",
-	Long:    `Firewall an instance with the specifed name or partial/full ID`,
+	Example: "civo instance firewall --id {uuid} -f {uuid}",
+	Long:    `Firewall an instance with the specifed firewall ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
-			os.Exit(-1)
-		}
-
-		search := args[0]
-		id := api.InstanceFind(search)
-		if id == "" {
+		instanceFirewallInstanceID := api.InstanceFind(instanceFirewallInstanceID)
+		if instanceFirewallInstanceID == "" {
 			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
 			os.Exit(-1)
 		}
 
-		_, err := api.InstanceFirewall(id, instanceFirewall)
+		_, err := api.InstanceFirewall(instanceFirewallInstanceID, instanceFirewallID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Printf("Set firewall for instance %s to %s\n", id, instanceFirewall)
+		fmt.Printf("Set firewall for instance %s to %s\n", instanceFirewallInstanceID, instanceFirewallID)
 	},
 }
 
 func init() {
 	instanceCmd.AddCommand(instanceFirewallCmd)
-	instanceFirewallCmd.Flags().StringVarP(&instanceFirewall, "firewall", "f", "", "The firewall to use")
+	instanceFirewallCmd.Flags().StringVarP(&instanceFirewallInstanceID, "id", "i", "", "The instance ID to use")
+	instanceFirewallCmd.Flags().StringVarP(&instanceFirewallID, "firewall", "f", "", "The firewall to use")
 }

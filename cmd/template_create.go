@@ -36,7 +36,7 @@ var templateCreateCmd = &cobra.Command{
 	Use:     "create",
 	Aliases: []string{"new", "build"},
 	Short:   "Create a new template",
-	Example: "civo templates create --name ubuntu-70.04 --image-id b834b08c-bec6-11e5-b756-5cf9389be614 --short-description 'An Ubuntu 70.04 base image'",
+	Example: "civo templates create --id ubuntu-70.04 --name 'Ubuntu 70.04' --image-id b834b08c-bec6-11e5-b756-5cf9389be614 --short-description 'An Ubuntu 70.04 base image'",
 	Long:    `Create a new template for people to use to build images from`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if templateCreateID == "" {

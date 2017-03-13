@@ -52,7 +52,7 @@ var snapshotCmd = &cobra.Command{
 				instanceId,
 				child.S("requested_at").Data().(string),
 				child.S("completed_at").Data().(string),
-				child.S("status").Data().(string),
+				child.S("state").Data().(string),
 				fmt.Sprintf("%.0f", child.S("size_gb").Data().(float64)),
 			})
 		}

@@ -34,13 +34,13 @@ var snapshotCreateCmd = &cobra.Command{
 	Example: "civo snapshot create --name my-backup --instance my-host.example.com",
 	Long:    `Create a new snapshot of the specified instance with the given name`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if snapshotCreateName == "" && len(args) > 0 {
-			snapshotCreateName = args[0]
+		if snapshotCreateName == "" {
+			fmt.Println("Couldn't snapshot an instance without specifying a name")
+			os.Exit(-1)
 		}
-		if snapshotCreateInstanceID == "" && snapshotCreateName != "" && len(args) > 0 {
-			snapshotCreateInstanceID = args[0]
-		} else if len(args) > 1 {
-			snapshotCreateInstanceID = args[1]
+		if snapshotCreateInstanceID == "" {
+			fmt.Println("Couldn't snapshot an instance without an ID")
+			os.Exit(-1)
 		}
 
 		instanceID := api.InstanceFind(snapshotCreateInstanceID)

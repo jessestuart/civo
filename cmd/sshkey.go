@@ -25,6 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var sshKeyFullIDs bool
+
 // sshKeyCommand represents the accounts command
 var sshKeyCommand = &cobra.Command{
 	Use:     "sshkey",
@@ -42,28 +44,22 @@ var sshKeyCommand = &cobra.Command{
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
 		table.SetAutoWrapText(false)
-		if api.Version() == 2 {
-			table.SetHeader([]string{"ID", "Name", "Fingerprint"})
-		} else {
-			table.SetHeader([]string{"Name", "Label"})
-		}
+		table.SetHeader([]string{"ID", "Name", "Fingerprint"})
 		items, _ := result.Children()
 		for _, child := range items {
-			if api.Version() == 2 {
-				parts := strings.Split(child.S("id").Data().(string), "-")
-				id := parts[0]
-
-				table.Append([]string{
-					id,
-					child.S("name").Data().(string),
-					child.S("fingerprint").Data().(string),
-				})
+			var id string
+			if sshKeyFullIDs {
+				id = child.S("id").Data().(string)
 			} else {
-				table.Append([]string{
-					child.S("name").Data().(string),
-					child.S("label").Data().(string),
-				})
+				parts := strings.Split(child.S("id").Data().(string), "-")
+				id = parts[0]
 			}
+
+			table.Append([]string{
+				id,
+				child.S("name").Data().(string),
+				child.S("fingerprint").Data().(string),
+			})
 		}
 		table.Render()
 	},
@@ -71,4 +67,5 @@ var sshKeyCommand = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(sshKeyCommand)
+	sshKeyCommand.Flags().BoolVarP(&sshKeyFullIDs, "full-ids", "f", false, "Return full IDs for SSH keys")
 }

@@ -49,5 +49,5 @@ var firewallCreateCmd = &cobra.Command{
 
 func init() {
 	firewallCmd.AddCommand(firewallCreateCmd)
-	firewallCreateCmd.Flags().StringVarP(&firewallCreateName, "name", "n", "", "Name of the firewall; lowercase, hyphen separated. If you don't specify one, a UUID followed by the instance_id will be used.")
+	firewallCreateCmd.Flags().StringVarP(&firewallCreateName, "name", "n", "", "Name of the firewall; lowercase, hyphen separated. If you don't specify one, a UUID will be used.")
 }

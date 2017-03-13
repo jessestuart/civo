@@ -19,36 +19,36 @@ import (
 	"os"
 
 	"github.com/absolutedevops/civo/api"
-	"github.com/absolutedevops/civo/config"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
-var accountResetName string
+var networkDestroyID string
 
-var accountResetCmd = &cobra.Command{
-	Use:     "reset",
-	Short:   "Reset the API key for an account",
-	Example: "create --name testuser",
-	Long:    `Given a name, reset the account by setting a new API key for it`,
+var networkDestroyCmd = &cobra.Command{
+	Use:     "remove",
+	Short:   "Remove a network",
+	Aliases: []string{"destroy", "delete", "remove"},
+	Long:    `Given a name or partial/whole ID that matches one network, remove that network`,
+	Example: "civo network remove --id {uuid}",
 	Run: func(cmd *cobra.Command, args []string) {
-		if accountResetName == "" {
-			fmt.Println("You need to specify a name with --name in order to reset an account")
-			os.Exit(-3)
+		networkDestroyID := api.NetworkFind(networkDestroyID)
+		if networkDestroyID == "" {
+			fmt.Println("Couldn't find a single network based on that name or partial/whole ID, it must match exactly one network")
+			os.Exit(-1)
 		}
 
-		_, err := api.AccountReset(accountResetName)
+		_, err := api.NetworkDestroy(networkDestroyID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
+		fmt.Println("Destroying network with ID", networkDestroyID)
 	},
 }
 
 func init() {
-	if config.Admin() {
-		accountCmd.AddCommand(accountResetCmd)
-		accountResetCmd.Flags().StringVarP(&accountResetName, "name", "n", "", "Name of the account; lowercase, hyphen separated")
-	}
+	networkCmd.AddCommand(networkDestroyCmd)
+	networkDestroyCmd.Flags().StringVarP(&networkDestroyID, "id", "i", "", "The network ID to delete")
 }

@@ -18,128 +18,77 @@ type InstanceParams struct {
 	SSHKey      string `url:"ssh_key"`
 	Template    string `url:"template"`
 	InitialUser string `url:"initial_user"`
+	NetworkID   string `url:"network_id"`
+	FirewallID  string `url:"firewall_id"`
 	Tags        string `url:"tags"`
 	PublicIP    bool   `url:"public_ip"`
 }
 
 func InstancesList(tags string) (json *gabs.Container, err error) {
 	if tags != "" {
-		if Version() == 2 {
-			return makeJSONCall(config.URL()+"/v2/instances?per_page=10000000&tags="+tags, HTTPGet, "")
-		} else {
-			return makeJSONCall(config.URL()+"/v1/instances?tags="+tags, HTTPGet, "")
-		}
+		return makeJSONCall(config.URL()+"/v2/instances?per_page=10000000&tags="+tags, HTTPGet, "")
 	} else {
-		if Version() == 2 {
-			return makeJSONCall(config.URL()+"/v2/instances?per_page=10000000", HTTPGet, "")
-		} else {
-			return makeJSONCall(config.URL()+"/v1/instances", HTTPGet, "")
-		}
+		return makeJSONCall(config.URL()+"/v2/instances?per_page=10000000", HTTPGet, "")
 	}
 }
 
 func InstanceCreate(params InstanceParams) (json *gabs.Container, err error) {
 	v, _ := query.Values(params)
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances", HTTPPost, v.Encode())
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances", HTTPPost, v.Encode())
-	}
+	return makeJSONCall(config.URL()+"/v2/instances", HTTPPost, v.Encode())
 }
 
 func InstanceReboot(id string, hard bool) (json *gabs.Container, err error) {
 	if hard {
-		if Version() == 2 {
-			return makeJSONCall(config.URL()+"/v2/instances/"+id+"/hard_reboots", HTTPPost, "")
-		} else {
-			return makeJSONCall(config.URL()+"/v1/instances/"+id+"/hard_reboots", HTTPPost, "")
-		}
+		return makeJSONCall(config.URL()+"/v2/instances/"+id+"/hard_reboots", HTTPPost, "")
 	} else {
-		if Version() == 2 {
-			return makeJSONCall(config.URL()+"/v2/instances/"+id+"/soft_reboots", HTTPPost, "")
-		} else {
-			return makeJSONCall(config.URL()+"/v1/instances/"+id+"/soft_reboots", HTTPPost, "")
-		}
+		return makeJSONCall(config.URL()+"/v2/instances/"+id+"/soft_reboots", HTTPPost, "")
 	}
 }
 
 func InstanceDestroy(id string) (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances/"+id, HTTPDelete, "")
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPDelete, "")
-	}
+	return makeJSONCall(config.URL()+"/v2/instances/"+id, HTTPDelete, "")
 }
 
 func InstanceRestore(id, snapshot string) (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances/"+id+"/restore", HTTPPut, "snapshot="+snapshot)
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances/"+id+"/restore", HTTPPut, "snapshot="+snapshot)
-	}
+	return makeJSONCall(config.URL()+"/v2/instances/"+id+"/restore", HTTPPut, "snapshot="+snapshot)
 }
 
 func InstanceRebuild(id string) (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances/"+id+"/rebuild", HTTPPut, "")
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances/"+id+"/rebuild", HTTPPut, "")
-	}
+	return makeJSONCall(config.URL()+"/v2/instances/"+id+"/rebuild", HTTPPut, "")
 }
 
 func InstanceFirewall(id, firewall string) (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances/"+id+"/firewall", HTTPPut, "name="+firewall)
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances/"+id+"/firewall", HTTPPut, "name="+firewall)
-	}
+	return makeJSONCall(config.URL()+"/v2/instances/"+id+"/firewall", HTTPPut, "firewall_id="+firewall)
 }
 
 func InstanceTags(id, tags string) (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances/"+id+"/tags", HTTPPut, "tags="+tags)
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances/"+id+"/tags", HTTPPut, "tags="+tags)
-	}
+	return makeJSONCall(config.URL()+"/v2/instances/"+id+"/tags", HTTPPut, "tags="+tags)
 }
 
 func InstanceUpgrade(id, size string) (json *gabs.Container, err error) {
-	if Version() == 2 {
-		return makeJSONCall(config.URL()+"/v2/instances/"+id, HTTPPut, "size="+size)
-	} else {
-		return makeJSONCall(config.URL()+"/v1/instances/"+id, HTTPPut, "size="+size)
-	}
+	return makeJSONCall(config.URL()+"/v2/instances/"+id+"/resize", HTTPPut, "size="+size)
 }
 
 // Utility functions ---------------------------------------------------------------------------------------------------
 
 func InstanceFind(search string) string {
-	ret := ""
 	instances, err := InstancesList("")
 	if err != nil {
 		fmt.Println("DEBUG: Returning early because err is", err)
-		return ret
+		return ""
 	}
 	items, _ := instances.S("items").Children()
 	for _, child := range items {
 		id := child.S("id").Data().(string)
 		name := child.S("hostname").Data().(string)
 		if strings.Contains(id, search) {
-			if ret != "" {
-				return ""
-			} else {
-				ret = id
-			}
+			return id
 		}
 		if strings.Contains(name, search) {
-			if ret != "" {
-				return ""
-			} else {
-				ret = id
-			}
+			return id
 		}
 	}
-	return ret
+	return ""
 }
 
 var ADJECTIVES = []string{

@@ -24,6 +24,7 @@ import (
 )
 
 var instanceRestoreSnapshot string
+var instanceRestoreInstanceID string
 
 var instanceRestoreCmd = &cobra.Command{
 	Use:     "restore",
@@ -32,29 +33,24 @@ var instanceRestoreCmd = &cobra.Command{
 	Example: "civo instance restore [name or ID] -s my-backup",
 	Long:    `Restore an instance with the specifed name or partial/full ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
-			os.Exit(-1)
-		}
-
-		search := args[0]
-		id := api.InstanceFind(search)
-		if id == "" {
+		instanceRestoreInstanceID := api.InstanceFind(instanceRestoreInstanceID)
+		if instanceRestoreInstanceID == "" {
 			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
 			os.Exit(-1)
 		}
 
-		_, err := api.InstanceRestore(id, instanceRestoreSnapshot)
+		_, err := api.InstanceRestore(instanceRestoreInstanceID, instanceRestoreSnapshot)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Println("Restoring instance with ID", id)
+		fmt.Println("Restoring instance with ID", instanceRestoreInstanceID)
 	},
 }
 
 func init() {
 	instanceCmd.AddCommand(instanceRestoreCmd)
+	instanceRestoreCmd.Flags().StringVarP(&instanceRestoreInstanceID, "id", "i", "", "The instance ID to reboot")
 	instanceRestoreCmd.Flags().StringVarP(&instanceRestoreSnapshot, "snapshot", "s", "", "Restore an instance to the state of a snapshot")
 }

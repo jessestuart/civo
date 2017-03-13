@@ -22,32 +22,32 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var firewallRuleDeleteName string
+var firewallRuleDeleteID string
 var firewallRuleDeleteRuleID string
 
 var firewallRuleDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"remove", "destroy"},
 	Short:   "Delete a firewall rule",
-	Example: "civo firewall rule delete --name restrictive --id 1",
-	Long:    `Delete a new firewall rule for the firewall with the given name`,
+	Example: "civo firewall rule delete --id {uuid} --rule-id {uuid}",
+	Long:    `Delete a firewall rule for the firewall with the given ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if firewallRuleDeleteName == "" && len(args) > 0 {
-			firewallRuleDeleteName = args[0]
+		if firewallRuleDeleteID == "" && len(args) > 0 {
+			firewallRuleDeleteID = args[0]
 		}
 
-		_, err := api.FirewallRuleDelete(firewallRuleDeleteName, firewallRuleDeleteRuleID)
+		_, err := api.FirewallRuleDelete(firewallRuleDeleteID, firewallRuleDeleteRuleID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Printf("Removed firewall rule '%s' from firewall '%s'\n", firewallRuleDeleteRuleID, firewallRuleDeleteName)
+		fmt.Printf("Removed firewall rule '%s' from firewall '%s'\n", firewallRuleDeleteRuleID, firewallRuleDeleteID)
 	},
 }
 
 func init() {
 	firewallRuleCmd.AddCommand(firewallRuleDeleteCmd)
-	firewallRuleDeleteCmd.Flags().StringVarP(&firewallRuleDeleteName, "name", "n", "", "Name of the firewall; lowercase, hyphen separated. If you don't specify one, a UUID followed by the instance_id will be used.")
-	firewallRuleDeleteCmd.Flags().StringVarP(&firewallRuleDeleteRuleID, "id", "i", "", "Which rule ID to delete")
+	firewallRuleDeleteCmd.Flags().StringVarP(&firewallRuleDeleteID, "id", "i", "", "ID of the firewall")
+	firewallRuleDeleteCmd.Flags().StringVarP(&firewallRuleDeleteRuleID, "rule-id", "r", "", "Which rule ID to delete")
 }

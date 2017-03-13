@@ -24,37 +24,34 @@ import (
 )
 
 var instanceRebootHard bool
+var instanceRebootInstanceID string
 
 var instanceRebootCmd = &cobra.Command{
 	Use:     "reboot",
 	Aliases: []string{"restart"},
 	Short:   "Reboot an instance",
-	Example: "civo instance reboot [name or ID]",
+	Example: "civo instance reboot --id {uuid}",
 	Long:    `Reboot an instance with the specifed name or partial/full ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("You need to specify a name or a partial/whole ID")
-			os.Exit(-1)
-		}
-
-		search := args[0]
-		id := api.InstanceFind(search)
-		if id == "" {
+		instanceRebootInstanceID := api.InstanceFind(instanceRebootInstanceID)
+		if instanceRebootInstanceID == "" {
 			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
 			os.Exit(-1)
 		}
 
-		_, err := api.InstanceReboot(id, instanceRebootHard)
+		_, err := api.InstanceReboot(instanceRebootInstanceID, instanceRebootHard)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
 			return
 		}
-		fmt.Println("Rebooting instance with ID", id)
+		fmt.Println("Rebooting instance with ID", instanceRebootInstanceID)
 	},
 }
 
 func init() {
 	instanceCmd.AddCommand(instanceRebootCmd)
 	instanceRebootCmd.Flags().BoolVarP(&instanceRebootHard, "hard", "", false, "Perform a hard-reboot - literally kill the machine and restart it")
+	instanceRebootCmd.Flags().StringVarP(&instanceRebootInstanceID, "id", "i", "", "The instance ID to reboot")
+
 }

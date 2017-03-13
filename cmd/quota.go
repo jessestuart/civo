@@ -26,6 +26,7 @@ import (
 )
 
 var quota api.QuotaParams
+var quotaAccountName string
 
 // quotaCmd represents the quota command
 var quotaCmd = &cobra.Command{
@@ -34,7 +35,13 @@ var quotaCmd = &cobra.Command{
 	Short:   "List the current account token's quota",
 	Long:    `Show all limits for the current account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		result, err := api.QuotaGet(quota.Account)
+		quota.AccountID = api.AccountFindByName(quotaAccountName)
+		if quota.AccountID == "" {
+			fmt.Println("Couldn't find a single account based on that name, it must match exactly one instance")
+			os.Exit(-1)
+		}
+
+		result, err := api.QuotaGet(quota.AccountID)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
 			fmt.Println(errorColor("An error occured:"), err.Error())
@@ -168,7 +175,7 @@ var quotaCmd = &cobra.Command{
 				fmt.Println(errorColor("An error occured:"), err.Error())
 				return
 			}
-			fmt.Println("Quota updated for account", quota.Account)
+			fmt.Println("Quota updated for account", quota.AccountID)
 		}
 	},
 }
@@ -176,7 +183,9 @@ var quotaCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(quotaCmd)
 	if config.Admin() {
-		quotaCmd.Flags().StringVarP(&quota.Account, "account", "", "", "The account to update the quota for")
+		fmt.Println("Updating the quota doesn't work against the v2 API at this moment")
+		fmt.Println("Please use the Civo.com website when logged in as an admin user")
+		quotaCmd.Flags().StringVarP(&quota.APIToken, "api-token", "", "", "The API token of the account to update the quota for")
 		quotaCmd.Flags().StringVarP(&quota.InstanceCount, "instance-count", "i", "", "The limit to the number of instances available")
 		quotaCmd.Flags().StringVarP(&quota.CpuCore, "cpu-core", "c", "", "The limit to the number of CPU cores available")
 		quotaCmd.Flags().StringVarP(&quota.RamMB, "ram-mb", "r", "", "The limit to the amount of RAM (in MB) available")
