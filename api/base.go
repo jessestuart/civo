@@ -55,6 +55,9 @@ func makeJSONCall(url string, method HTTPMethod, data string) (*gabs.Container, 
 	// fmt.Println(">>> ", url)
 	// fmt.Println(body)
 
+	if status == 502 {
+		return nil, errors.New("The API server returned a 502 Bad Gateway error, please try again later")
+	}
 	if !(status >= 200 && status <= 299) {
 		jsonObject, err := gabs.ParseJSON([]byte(body))
 		if err != nil {
