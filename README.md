@@ -1,24 +1,24 @@
 # Civo Command-Line Client
 
-This utility is for interacting with the Civo Cloud API provided by Absolute DevOps Ltd. In order to use the API you need an API token, which should have been sent to you by your provider. If you don't have this, please contact them.
+This utility is for interacting with the Civo Cloud API provided by Absolute DevOps Ltd. In order to use the API you need an API apikey, which should have been sent to you by your provider. If you don't have this, please contact them.
 
 ## Installation/overview
 
 The first step should be to download the client.  The easiest way at the moment is to visit the [GitHub Releases](https://github.com/absolutedevops/civo/releases) and download the latest version as a Zip file.  This will include folders called `macosx` and `linux` containing the appropriate binaries.  You will need to copy the correct one to a place on your path, `/usr/local/bin` is often a good choice.
 
-You'll then need to run a command in a Terminal to register your token. Let's take the example that your company is called "Acme Widgets" and your token is "123456789012345678901234567890". You need to give the token a short reference when saving it, such as `acme`:
+You'll then need to run a command in a Terminal to register your apikey. Let's take the example that your company is called "Acme Widgets" and your apikey is "123456789012345678901234567890". You need to give the apikey a short reference when saving it, such as `acme`:
 
 ```
-civo tokens save -n acme -k 123456789012345678901234567890
+civo apikeys save -n acme -k 123456789012345678901234567890
 ```
 
-You will then need to set this as your default token to be used in all future requests with:
+You will then need to set this as your default apikey to be used in all future requests with:
 
 ```
-civo tokens default -n acme
+civo apikeys default -n acme
 ```
 
-Now you are free to use the remaining commands in the system. We'll work through the most common ones below, the rest are normally used by Civo administrators (and the permission levels associated with your token in CIvo won't allow you to make them).
+Now you are free to use the remaining commands in the system. We'll work through the most common ones below, the rest are normally used by Civo administrators (and the permission levels associated with your apikey in CIvo won't allow you to make them).
 
 In order to discover the available commands you can use `civo -h` to list the available commands, then use `civo [command] -h` to list sub commands and so on further down the line.  For example:
 

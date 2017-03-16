@@ -22,29 +22,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var tokenCurrentName string
+var apikeyRemoveName string
 
-// tokenCurrentCmd represents the accounts command
-var tokenCurrentCmd = &cobra.Command{
-	Use:     "current",
-	Aliases: []string{"default", "use", "choose", "select"},
-	Short:   "Change your current token",
-	Long:    `Choose which token the command line client should use in future connections`,
+// apikeyRemoveCmd represents the accounts command
+var apikeyRemoveCmd = &cobra.Command{
+	Use:     "remove",
+	Aliases: []string{"delete", "forget"},
+	Short:   "Remove an API Key",
+	Long:    `To keep your list of API Keys tidy, you can remove ones no longer necessary`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if tokenCurrentName == "" && len(args) > 0 {
-			tokenCurrentName = args[0]
-		}
-		if tokenCurrentName == "" {
-			fmt.Println("You need to specify a name with --name in order to set the token as the current one")
+		if apikeyRemoveName == "" {
+			fmt.Println("You need to specify a name with --name in order to save the apikey")
 			os.Exit(-3)
 		}
 
-		config.TokenSetCurrent(tokenCurrentName)
-		fmt.Printf("Current token is now %s\n", tokenCurrentName)
+		config.APIKeyRemove(apikeyRemoveName)
+		fmt.Printf("Removed API Key %s\n", apikeyRemoveName)
 	},
 }
 
 func init() {
-	tokenCmd.AddCommand(tokenCurrentCmd)
-	tokenCurrentCmd.Flags().StringVarP(&tokenCurrentName, "name", "n", "", "The name to use for this token (can be an abbreviation)")
+	apikeyCmd.AddCommand(apikeyRemoveCmd)
+	apikeyRemoveCmd.Flags().StringVarP(&apikeyRemoveName, "name", "n", "", "The name of the API Key to remove")
 }

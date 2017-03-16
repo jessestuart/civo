@@ -38,7 +38,7 @@ var urlCmd = &cobra.Command{
 			urlValue = "https://api.civo.com"
 		}
 
-		config.TokenSetURL(urlValue)
+		config.APIKeySetURL(urlValue)
 		fmt.Printf("Current URL is now %s\n", urlValue)
 	},
 }

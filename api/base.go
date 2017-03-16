@@ -9,7 +9,7 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
-var CurrentToken string
+var CurrentAPIKey string
 
 type HTTPMethod int
 
@@ -24,7 +24,7 @@ const (
 
 func requestHeaders() map[string]string {
 	headers := make(map[string]string)
-	headers["Authorization"] = fmt.Sprintf("bearer %s", config.CurrentToken())
+	headers["Authorization"] = fmt.Sprintf("bearer %s", config.CurrentAPIKey())
 	headers["User-agent"] = "Civo Go client v1.0"
 	return headers
 }

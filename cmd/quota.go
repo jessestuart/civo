@@ -32,7 +32,7 @@ var quotaAccountName string
 var quotaCmd = &cobra.Command{
 	Use:     "quota",
 	Aliases: []string{"quotas"},
-	Short:   "List the current account token's quota",
+	Short:   "List the current account apikey's quota",
 	Long:    `Show all limits for the current account`,
 	Run: func(cmd *cobra.Command, args []string) {
 		quota.AccountID = api.AccountFindByName(quotaAccountName)

@@ -71,54 +71,54 @@ func URL() string {
 	return getString("meta.url")
 }
 
-func CurrentToken() string {
-	if currentTokenKey := getString("meta.current_token"); currentTokenKey != "" {
-		return getString(fmt.Sprintf("tokens.%s", currentTokenKey))
+func CurrentAPIKey() string {
+	if currentAPIKeyKey := getString("meta.current_apikey"); currentAPIKeyKey != "" {
+		return getString(fmt.Sprintf("apikeys.%s", currentAPIKeyKey))
 	}
-	tokens, _ := Config.S("tokens").ChildrenMap()
-	for name, token := range tokens {
-		Config.SetP(name, "meta.current_token")
+	apikeys, _ := Config.S("apikeys").ChildrenMap()
+	for name, apikey := range apikeys {
+		Config.SetP(name, "meta.current_apikey")
 		save()
-		return token.Data().(string)
+		return apikey.Data().(string)
 	}
 
-	fmt.Println("You haven't got a token saved, ask your provider for one and save it using 'civo tokens save'")
+	fmt.Println("You haven't got a apikey saved, ask your provider for one and save it using 'civo apikeys save'")
 	os.Exit(-1)
 	return ""
 }
 
-func Tokens() map[string]string {
+func APIKeys() map[string]string {
 	ret := make(map[string]string)
-	tokens, _ := Config.S("tokens").ChildrenMap()
-	for name, token := range tokens {
-		ret[name] = token.Data().(string)
+	apikeys, _ := Config.S("apikeys").ChildrenMap()
+	for name, apikey := range apikeys {
+		ret[name] = apikey.Data().(string)
 	}
 	return ret
 }
 
-func TokenSave(name, key string) {
-	Config.SetP(key, "tokens."+name)
+func APIKeySave(name, key string) {
+	Config.SetP(key, "apikeys."+name)
 	save()
 }
 
-func TokenRemove(name string) {
-	err := Config.Delete("tokens", name)
+func APIKeyRemove(name string) {
+	err := Config.Delete("apikeys", name)
 	if err != nil {
 		fmt.Println(err)
 	}
 	save()
 }
 
-func TokenCurrent() string {
-	return getString("meta.current_token")
+func APIKeyCurrent() string {
+	return getString("meta.current_apikey")
 }
 
 func DefaultRegion() string {
 	return getString("meta.default_region")
 }
 
-func TokenSetCurrent(name string) {
-	Config.SetP(name, "meta.current_token")
+func APIKeySetCurrent(name string) {
+	Config.SetP(name, "meta.current_apikey")
 	save()
 }
 
@@ -139,7 +139,7 @@ func LatestReleaseCheckSet(when time.Time) {
 	save()
 }
 
-func TokenSetURL(url string) {
+func APIKeySetURL(url string) {
 	Config.SetP(url, "meta.url")
 	save()
 }

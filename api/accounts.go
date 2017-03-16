@@ -23,7 +23,7 @@ func AccountReset(name string) (json *gabs.Container, err error) {
 	return makeJSONCall(config.URL()+"/v2/accounts/"+name, HTTPPut, fmt.Sprintf("name=%s", name))
 }
 
-func AccountFindByToken(token string) string {
+func AccountFindByAPIKey(apikey string) string {
 	var accounts *gabs.Container
 	var err error
 
@@ -35,7 +35,7 @@ func AccountFindByToken(token string) string {
 
 	items, _ := accounts.Children()
 	for _, child := range items {
-		if child.S("api_key").Data().(string) == token {
+		if child.S("api_key").Data().(string) == apikey {
 			return child.S("id").Data().(string)
 		}
 	}

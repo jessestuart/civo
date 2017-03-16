@@ -22,19 +22,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// tokenCmd represents the accounts command
-var tokenCmd = &cobra.Command{
-	Use:     "token",
-	Aliases: []string{"tokens"},
-	Short:   "List all tokens",
-	Long:    `List the tokens you've saved for accessing the API`,
+// apikeyCmd represents the accounts command
+var apikeyCmd = &cobra.Command{
+	Use:     "apikey",
+	Aliases: []string{"apikeys"},
+	Short:   "List all API Keys",
+	Long:    `List the API Keys you've saved for accessing the Civo API`,
 	Run: func(cmd *cobra.Command, args []string) {
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoFormatHeaders(false)
 		table.SetHeader([]string{"Name", "API Key", "Current"})
-		for name, apiKey := range config.Tokens() {
+		for name, apiKey := range config.APIKeys() {
 			current := ""
-			if name == config.TokenCurrent() {
+			if name == config.APIKeyCurrent() {
 				current = "<====="
 			}
 			table.Append([]string{
@@ -48,5 +48,5 @@ var tokenCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(tokenCmd)
+	RootCmd.AddCommand(apikeyCmd)
 }
