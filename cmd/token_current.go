@@ -46,5 +46,5 @@ var tokenCurrentCmd = &cobra.Command{
 
 func init() {
 	tokenCmd.AddCommand(tokenCurrentCmd)
-	tokenCurrentCmd.Flags().StringVarP(&tokenCurrentName, "name", "n", "", "The name to use for this token (can be an appeviation)")
+	tokenCurrentCmd.Flags().StringVarP(&tokenCurrentName, "name", "n", "", "The name to use for this token (can be an abbreviation)")
 }

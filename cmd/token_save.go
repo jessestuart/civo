@@ -53,6 +53,6 @@ var tokenSaveCmd = &cobra.Command{
 
 func init() {
 	tokenCmd.AddCommand(tokenSaveCmd)
-	tokenSaveCmd.Flags().StringVarP(&tokenSaveName, "name", "n", "", "The name to use for this token (can be an appeviation)")
+	tokenSaveCmd.Flags().StringVarP(&tokenSaveName, "name", "n", "", "The name to use for this token (can be an abbreviation)")
 	tokenSaveCmd.Flags().StringVarP(&tokenSaveKey, "key", "k", "", "The API key supplied for use against a Civo cloud")
 }
