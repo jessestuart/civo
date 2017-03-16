@@ -11,7 +11,7 @@ import (
 
 var Config *gabs.Container
 
-const VERSION string = "0.10.3"
+const VERSION string = "0.10.4"
 
 func LoadConfig() {
 	filename := os.ExpandEnv("$HOME/.civo.json")
@@ -31,8 +31,8 @@ func LoadConfig() {
 func createNewJSONConfig(filename string) {
 	newConfig := gabs.New()
 	newConfig.SetP(false, "meta.admin")
+	newConfig.SetP("lon1", "meta.default_region")
 	newConfig.SetP("https://api.civo.com", "meta.url")
-	newConfig.SetP("1", "meta.version")
 	ioutil.WriteFile(filename, []byte(newConfig.StringIndent("", "  ")), 0600)
 }
 
@@ -81,6 +81,7 @@ func CurrentToken() string {
 		save()
 		return token.Data().(string)
 	}
+
 	fmt.Println("You haven't got a token saved, ask your provider for one and save it using 'civo tokens save'")
 	os.Exit(-1)
 	return ""
@@ -110,6 +111,10 @@ func TokenRemove(name string) {
 
 func TokenCurrent() string {
 	return getString("meta.current_token")
+}
+
+func DefaultRegion() string {
+	return getString("meta.default_region")
 }
 
 func TokenSetCurrent(name string) {

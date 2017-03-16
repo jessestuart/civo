@@ -18,15 +18,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/absolutedevops/civo/api"
 	"github.com/absolutedevops/civo/config"
-	"github.com/fatih/color"
 	toml "github.com/pelletier/go-toml"
 	"github.com/spf13/cobra"
 )
 
 var Config *toml.TomlTree
-var DefaultRegion string
 
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -48,17 +45,6 @@ func Execute() {
 }
 
 func init() {
-	result, err := api.RegionsList()
-	if err != nil {
-		errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
-		fmt.Println(errorColor("An error occured:"), err.Error())
-		return
-	}
-
-	items, _ := result.Children()
-	if len(items) > 0 {
-		DefaultRegion = items[0].S("code").Data().(string)
-	}
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.

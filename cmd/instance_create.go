@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/absolutedevops/civo/config"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -43,6 +44,9 @@ var instanceCreateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if instanceCreateName == "" {
 			instanceCreateName = api.InstanceSuggestHostname()
+		}
+		if instanceCreateRegion == "" {
+			instanceCreateRegion = config.DefaultRegion()
 		}
 
 		params := api.InstanceParams{
@@ -76,7 +80,7 @@ func init() {
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateName, "name", "n", "", "Name of the instance; lowercase, hyphen separated. If you don't specify one, a random one will be used.")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSize, "size", "s", "g1.small", "The size from 'civo sizes'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTags, "tags", "g", "", "A space-separated list of tags to use")
-	instanceCreateCmd.Flags().StringVarP(&instanceCreateRegion, "region", "r", DefaultRegion, "The region from 'civo regions'")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateRegion, "region", "r", "", "The region from 'civo regions'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSSHKey, "ssh-key-id", "k", "default", "The SSH key ID from 'civo sshkeys'")
 	instanceCreateCmd.Flags().BoolVarP(&instanceCreatePublicIP, "public-ip", "p", true, "Should a public IP address be allocated")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTemplate, "template", "t", "ubuntu-16.04", "The template from 'civo templates'")

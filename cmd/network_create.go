@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/absolutedevops/civo/api"
+	"github.com/absolutedevops/civo/config"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -41,6 +42,10 @@ var networkCreateCmd = &cobra.Command{
 			networkCreateLabel = networkCreateName
 		}
 
+		if networkCreateRegion == "" {
+			networkCreateRegion = config.DefaultRegion()
+		}
+
 		_, err := api.NetworkCreate(networkCreateName, networkCreateLabel, networkCreateRegion)
 		if err != nil {
 			errorColor := color.New(color.FgRed, color.Bold).SprintFunc()
@@ -55,5 +60,5 @@ func init() {
 	networkCmd.AddCommand(networkCreateCmd)
 	networkCreateCmd.Flags().StringVarP(&networkCreateName, "name", "n", "", "Name of the network; lowercase, hyphen separated. If you don't specify one, a UUID will be used.")
 	networkCreateCmd.Flags().StringVarP(&networkCreateLabel, "label", "l", "", "A nice name for the network; can contain spaces, etc.")
-	networkCreateCmd.Flags().StringVarP(&networkCreateRegion, "region", "r", DefaultRegion, "The region from 'civo regions'")
+	networkCreateCmd.Flags().StringVarP(&networkCreateRegion, "region", "r", "", "The region from 'civo regions'")
 }
