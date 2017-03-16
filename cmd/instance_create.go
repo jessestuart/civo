@@ -77,7 +77,7 @@ func init() {
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSize, "size", "s", "g1.small", "The size from 'civo sizes'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTags, "tags", "g", "", "A space-separated list of tags to use")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateRegion, "region", "r", DefaultRegion, "The region from 'civo regions'")
-	instanceCreateCmd.Flags().StringVarP(&instanceCreateSSHKey, "ssh-key", "k", "default", "The SSH key name from 'civo sshkeys'")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateSSHKey, "ssh-key-id", "k", "default", "The SSH key ID from 'civo sshkeys'")
 	instanceCreateCmd.Flags().BoolVarP(&instanceCreatePublicIP, "public-ip", "p", true, "Should a public IP address be allocated")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTemplate, "template", "t", "ubuntu-16.04", "The template from 'civo templates'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateFirewallID, "firewall", "f", "default", "The firewall ID or name from 'civo firewalls'")
