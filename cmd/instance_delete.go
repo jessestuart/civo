@@ -32,6 +32,10 @@ var instanceDestroyCmd = &cobra.Command{
 	Long:    `Given a name or partial/whole ID that matches one instance, destroy that instance`,
 	Example: "civo instance delete [name or ID]",
 	Run: func(cmd *cobra.Command, args []string) {
+		if instanceDestroyInstanceID == "" {
+			fmt.Println("You MUST specify an id with --id/-i")
+			os.Exit(-1)
+		}
 		instanceDestroyInstanceID := api.InstanceFind(instanceDestroyInstanceID)
 		if instanceDestroyInstanceID == "" {
 			fmt.Println("Couldn't find a single instance based on that name or partial/whole ID, it must match exactly one instance")
