@@ -27,7 +27,7 @@ import (
 var instanceCreateName string
 var instanceCreateSize string
 var instanceCreateRegion string
-var instanceCreateSSHKey string
+var instanceCreateSSHKeyID string
 var instanceCreatePublicIP bool
 var instanceCreateTemplate string
 var instanceCreateFirewallID string
@@ -39,7 +39,7 @@ var instanceCreateCmd = &cobra.Command{
 	Use:     "create",
 	Aliases: []string{"new", "build"},
 	Short:   "Create a new instance",
-	Example: "civo instance create --name test1.example.com --size g1.small --region svg1 --ssh-key default",
+	Example: "civo instance create --name test1.example.com --size g1.small --region svg1 --ssh-key-id 1234567890",
 	Long:    `Create a new instance with the described specification under your current account`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if instanceCreateName == "" {
@@ -48,12 +48,15 @@ var instanceCreateCmd = &cobra.Command{
 		if instanceCreateRegion == "" {
 			instanceCreateRegion = config.DefaultRegion()
 		}
+		if instanceCreateSSHKeyID != "" {
+			instanceCreateSSHKeyID = api.SshKeyFind(instanceCreateSSHKeyID)
+		}
 
 		params := api.InstanceParams{
 			Name:        instanceCreateName,
 			Size:        instanceCreateSize,
 			Region:      instanceCreateRegion,
-			SSHKey:      instanceCreateSSHKey,
+			SSHKeyID:    instanceCreateSSHKeyID,
 			Template:    instanceCreateTemplate,
 			InitialUser: instanceCreateInitialUser,
 			PublicIP:    instanceCreatePublicIP,
@@ -81,7 +84,7 @@ func init() {
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateSize, "size", "s", "g1.small", "The size from 'civo sizes'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTags, "tags", "g", "", "A space-separated list of tags to use")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateRegion, "region", "r", "", "The region from 'civo regions'")
-	instanceCreateCmd.Flags().StringVarP(&instanceCreateSSHKey, "ssh-key-id", "k", "default", "The SSH key ID from 'civo sshkeys'")
+	instanceCreateCmd.Flags().StringVarP(&instanceCreateSSHKeyID, "ssh-key-id", "k", "default", "The SSH key ID from 'civo sshkeys'")
 	instanceCreateCmd.Flags().BoolVarP(&instanceCreatePublicIP, "public-ip", "p", true, "Should a public IP address be allocated")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateTemplate, "template", "t", "ubuntu-16.04", "The template from 'civo templates'")
 	instanceCreateCmd.Flags().StringVarP(&instanceCreateFirewallID, "firewall", "f", "default", "The firewall ID or name from 'civo firewalls'")

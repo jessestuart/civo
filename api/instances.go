@@ -15,7 +15,7 @@ type InstanceParams struct {
 	Name        string `url:"hostname"`
 	Size        string `url:"size"`
 	Region      string `url:"region"`
-	SSHKey      string `url:"ssh_key"`
+	SSHKeyID    string `url:"ssh_key_id"`
 	Template    string `url:"template"`
 	InitialUser string `url:"initial_user"`
 	NetworkID   string `url:"network_id"`

@@ -30,7 +30,7 @@ var sshKeyUploadPublicKeyFile string
 
 var sshKeyUploadCmd = &cobra.Command{
 	Use:     "upload",
-	Aliases: []string{"new", "store"},
+	Aliases: []string{"new", "store", "create"},
 	Short:   "Upload an SSH key",
 	Example: "civo sshkey upload --name default --public-key ~/.ssh/id_rsa.pub",
 	Long:    `Upload an SSH public key, then this can be chosen when creating an instance`,

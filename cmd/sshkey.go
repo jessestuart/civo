@@ -30,7 +30,7 @@ var sshKeyFullIDs bool
 // sshKeyCommand represents the accounts command
 var sshKeyCommand = &cobra.Command{
 	Use:     "sshkey",
-	Aliases: []string{"sshkeys"},
+	Aliases: []string{"sshkeys", "ssh-key", "ssh-keys"},
 	Short:   "List uploaded SSH keys",
 	Long:    `List all the uploaded SSH public keys you can specify when creating an instance`,
 	Run: func(cmd *cobra.Command, args []string) {
