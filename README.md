@@ -110,8 +110,8 @@ If you don't specify a name, a random one will be created for you.
 If you decide you don't need an instance any more you can remove it by simply calling `civo instance destroy` passing in either the ID or the name, using the details above as an example:
 
 ```
-civo instance destroy 8043d0e7
-civo instance destroy test1.example.com
+civo instance destroy -i8043d0e7
+civo instance destroy --id=test1.example.com
 ```
 
 **Note:** The machine will be forever destroyed at this point, you can't get the data back from the hard drive afterwards.
@@ -119,13 +119,13 @@ civo instance destroy test1.example.com
 If your machine gets stuck you can restart it with (again using either the ID or the name):
 
 ```
-civo instance reboot 8043d0e7
+civo instance reboot --id=8043d0e7
 ```
 
 If it's *really* stuck (i.e. hard kernel lock) then you can do the cloud equivalent of unplugging it and plugging it back in with the addition of the hard switch:
 
 ```
-civo instance reboot --hard 8043d0e7
+civo instance reboot --hard --id=8043d0e7
 ```
 
 ## Snapshots (backups)
@@ -158,13 +158,13 @@ civo firewall rules create my-firewall -p icmp
 You can check that it's configured correctly by running `civo firewall rules my-firewall`. Now that you're sure your firewall is configured, you can assign it to one or more instances with:
 
 ```
-civo instances firewall 8043d0e7 --firewall my-firewall
+civo instances firewall --id=8043d0e7 --firewall my-firewall
 ```
 
 If you make a mistake at any point, you can revert to the default firewall by simply running the same command without `--firewall ...`, for example:
 
 ```
-civo instances firewall 8043d0e7
+civo instances firewall --id=8043d0e7
 ```
 
 ## Quota
