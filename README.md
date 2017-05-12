@@ -138,7 +138,7 @@ civo snapshot create --name my-backup --instance 8043d0e7 --safe
 
 The name can be anything you choose, it won't conflict if you create two snapshots with the same name (but it will make it harder for you to remember which is which).  The instance has to be part of the ID or a unique part of the hostname.  The `--safe` is optional - without this switch it will snapshot your instance while it runs, with the flag it will shut the instance down first, take a snapshot then start it back up.  The reason it's referred to as `safe` is that if you snapshot a running instance, any database server may be the middle of rewriting files for example, leaving them in a half-rewritten and hence corrupted state. If you know your machine is in a good state (say it's an application server), then you can snapshot while it's running.
 
-## Firewalls
+## Firewalls
 
 By default all ports and protocols are open on your instance.  We would recommend either using something like [iptables](http://netfilter.org/projects/iptables/) or [Ucomplicated Fire Wall](https://help.ubuntu.com/community/UFW) on the instance, or using the Civo firewall functionality which sits outside your instance (and hence can't be turned off if the machine is compromised).
 
