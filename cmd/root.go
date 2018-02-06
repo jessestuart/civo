@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Config *toml.TomlTree
+var Config *toml.Tree
 
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -32,7 +32,7 @@ var RootCmd = &cobra.Command{
 	Long:  `Version ` + config.VERSION + ` of the Civo command line client for interacting with the Civo API for cloud instances.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	//  Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
